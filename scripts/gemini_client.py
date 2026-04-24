@@ -3,14 +3,22 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from typing import List
 
 import requests
 
-MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
-ENDPOINT = (
-    f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent"
-)
+# 優先順にモデル名を並べる。最初が429なら次をリトライ。
+MODEL_FALLBACKS = [
+    os.environ.get("GEMINI_MODEL", "gemini-2.5-flash"),
+    "gemini-2.5-flash-lite",
+    "gemini-flash-latest",
+    "gemini-2.0-flash",
+]
+
+
+def _endpoint(model: str) -> str:
+    return f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 
 
 def _build_prompt(
@@ -93,21 +101,45 @@ def summarize(
         allow_odd_lots=allow_odd_lots,
     )
 
-    resp = requests.post(
-        ENDPOINT,
-        params={"key": api_key},
-        json={
-            "contents": [{"parts": [{"text": prompt}]}],
-            "generationConfig": {
-                "temperature": 0.6,
-                "maxOutputTokens": 1600,
-            },
-        },
-        timeout=60,
-    )
-    resp.raise_for_status()
-    data = resp.json()
-    try:
-        return data["candidates"][0]["content"]["parts"][0]["text"].strip()
-    except (KeyError, IndexError):
-        raise RuntimeError(f"Geminiレスポンス解析失敗: {json.dumps(data)[:500]}")
+    last_err = None
+    tried = []
+    for model in dict.fromkeys(MODEL_FALLBACKS):  # 重複排除
+        tried.append(model)
+        try:
+            resp = requests.post(
+                _endpoint(model),
+                params={"key": api_key},
+                json={
+                    "contents": [{"parts": [{"text": prompt}]}],
+                    "generationConfig": {
+                        "temperature": 0.6,
+                        "maxOutputTokens": 1600,
+                    },
+                },
+                timeout=60,
+            )
+            if resp.status_code == 429:
+                print(f"[warn] {model} 429 Too Many Requests -> next model")
+                time.sleep(2)
+                last_err = f"{model} 429"
+                continue
+            if resp.status_code == 404:
+                print(f"[warn] {model} 404 Not Found -> next model")
+                last_err = f"{model} 404"
+                continue
+            resp.raise_for_status()
+            data = resp.json()
+            try:
+                text = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+                print(f"[ok] モデル {model} で応答成功")
+                return text
+            except (KeyError, IndexError):
+                last_err = f"解析失敗 {model}: {json.dumps(data)[:300]}"
+                continue
+        except requests.HTTPError as e:
+            last_err = f"{model} HTTP {e.response.status_code}: {e.response.text[:200]}"
+            continue
+        except Exception as e:
+            last_err = f"{model} exception: {e}"
+            continue
+    raise RuntimeError(f"全モデル失敗 (試行={tried}) 最後のエラー: {last_err}")
