@@ -1,0 +1,9 @@
+{
+  "budget_man": 10,
+  "allow_odd_lots": true,
+  "allowed_weekends": ["2026-04-25", "2026-04-26"],
+  "indices": ["^N225", "1306.T"],
+  "max_news_chars": 220,
+  "important_news_max_chars": 400,
+  "include_links": true
+}

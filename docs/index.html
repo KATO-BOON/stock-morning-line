@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<title>株通知 設定</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+  :root { --g:#06c755; --bg:#f5f7f9; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Meiryo,sans-serif; background:var(--bg); color:#111; padding:16px; }
+  h1 { font-size:20px; margin:0 0 12px; }
+  .card { background:#fff; border-radius:10px; padding:16px; margin-bottom:14px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+  .muted { color:#666; font-size:13px; margin-top:4px; }
+  .budget { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:8px; }
+  .budget button { padding:16px 0; font-size:18px; border:2px solid #ddd; background:#fff; border-radius:8px; cursor:pointer; }
+  .budget button.active { background:var(--g); color:#fff; border-color:var(--g); }
+  input[type=text], input[type=password] { width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; font-size:14px; }
+  label { display:block; font-size:13px; color:#333; margin-top:10px; }
+  .row { display:flex; gap:8px; align-items:center; }
+  button.primary { padding:12px 18px; background:var(--g); color:#fff; border:0; border-radius:6px; font-size:15px; cursor:pointer; }
+  button.primary:disabled { opacity:.5; }
+  .log { font-family:ui-monospace,Consolas,monospace; font-size:12px; white-space:pre-wrap; color:#333; background:#fafafa; padding:10px; border-radius:6px; max-height:200px; overflow:auto; }
+  .toggle { display:inline-flex; align-items:center; gap:6px; margin-top:8px; }
+</style>
+</head>
+<body>
+<h1>📈 株通知 設定</h1>
+
+<div class="card">
+  <strong>1. 予算（1回の購入の目安）</strong>
+  <div class="muted">例: 10万円 → 株価1,000円で100株 / 500円で200株 など</div>
+  <div class="budget" id="budget-buttons"></div>
+</div>
+
+<div class="card">
+  <strong>2. 単元未満株</strong>
+  <div class="toggle">
+    <input type="checkbox" id="odd-lots" />
+    <label for="odd-lots" style="margin:0;">SBI/楽天などで1株から買える（推奨: オン）</label>
+  </div>
+</div>
+
+<div class="card">
+  <strong>3. 今週末も配信する（土日）</strong>
+  <div class="toggle">
+    <input type="checkbox" id="weekend" />
+    <label for="weekend" style="margin:0;">2026-04-25〜2026-04-26 の土日も配信</label>
+  </div>
+</div>
+
+<div class="card">
+  <strong>4. GitHub接続情報（初回のみ）</strong>
+  <div class="muted">設定をリポジトリに保存するのに必要。PATはブラウザに保存され、外部送信されません。</div>
+  <label>GitHub username</label>
+  <input type="text" id="gh-user" value="KATO-BOON" />
+  <label>Repo</label>
+  <input type="text" id="gh-repo" value="stock-morning-line" />
+  <label>Personal Access Token (repo scope)</label>
+  <input type="password" id="gh-pat" placeholder="ghp_..." />
+</div>
+
+<div class="row">
+  <button class="primary" id="save">設定を保存</button>
+  <button id="test" style="padding:12px 18px;border-radius:6px;border:1px solid #ccc;background:#fff;cursor:pointer;">今すぐ配信テスト</button>
+</div>
+
+<div class="card" style="margin-top:14px;">
+  <strong>ログ</strong>
+  <div class="log" id="log">（ここに結果が出ます）</div>
+</div>
+
+<script>
+const BUDGETS = [5, 10, 20, 30, 50, 100];
+let state = JSON.parse(localStorage.getItem('stock-morning-line') || '{}');
+
+function log(msg) {
+  const el = document.getElementById('log');
+  el.textContent += `\n[${new Date().toLocaleTimeString()}] ${msg}`;
+  el.scrollTop = el.scrollHeight;
+}
+
+function renderBudget() {
+  const wrap = document.getElementById('budget-buttons');
+  wrap.innerHTML = '';
+  BUDGETS.forEach(b => {
+    const btn = document.createElement('button');
+    btn.textContent = `${b}万`;
+    btn.className = (state.budget_man === b) ? 'active' : '';
+    btn.onclick = () => { state.budget_man = b; renderBudget(); };
+    wrap.appendChild(btn);
+  });
+}
+
+function init() {
+  document.getElementById('odd-lots').checked = state.allow_odd_lots !== false;
+  document.getElementById('weekend').checked = !!(state.allowed_weekends && state.allowed_weekends.length);
+  if (state.gh_pat) document.getElementById('gh-pat').value = state.gh_pat;
+  renderBudget();
+}
+
+function readForm() {
+  state.allow_odd_lots = document.getElementById('odd-lots').checked;
+  state.allowed_weekends = document.getElementById('weekend').checked
+    ? ['2026-04-25','2026-04-26'] : [];
+  state.gh_user = document.getElementById('gh-user').value.trim();
+  state.gh_repo = document.getElementById('gh-repo').value.trim();
+  state.gh_pat = document.getElementById('gh-pat').value.trim();
+}
+
+async function saveToRepo() {
+  readForm();
+  if (!state.budget_man) { log('予算ボタンを1つ選んでください'); return; }
+  if (!state.gh_pat) { log('GitHub PATが未入力'); return; }
+  localStorage.setItem('stock-morning-line', JSON.stringify(state));
+
+  const path = 'config/settings.json';
+  const url = `https://api.github.com/repos/${state.gh_user}/${state.gh_repo}/contents/${path}`;
+  log('現在のsettings.jsonを取得中…');
+  let sha;
+  const getResp = await fetch(url, { headers: { Authorization: `token ${state.gh_pat}` } });
+  if (getResp.status === 200) {
+    sha = (await getResp.json()).sha;
+  } else if (getResp.status !== 404) {
+    log(`GET失敗 ${getResp.status}`); return;
+  }
+
+  const body = {
+    budget_man: state.budget_man,
+    allow_odd_lots: state.allow_odd_lots,
+    allowed_weekends: state.allowed_weekends,
+    indices: ["^N225","^TOPX"],
+    max_news_chars: 220,
+    important_news_max_chars: 400,
+    include_links: true
+  };
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(body, null, 2))));
+  const putResp = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      Authorization: `token ${state.gh_pat}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      message: `Update settings (budget=${state.budget_man}万, weekend=${state.allowed_weekends.length>0})`,
+      content,
+      sha,
+    }),
+  });
+  if (putResp.ok) log(`✅ 保存成功（budget=${state.budget_man}万）`);
+  else log(`❌ 保存失敗 ${putResp.status}: ${await putResp.text()}`);
+}
+
+async function runNow() {
+  readForm();
+  if (!state.gh_pat) { log('GitHub PATが未入力'); return; }
+  const url = `https://api.github.com/repos/${state.gh_user}/${state.gh_repo}/actions/workflows/morning.yml/dispatches`;
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: `token ${state.gh_pat}`,
+      'Content-Type': 'application/json',
+      Accept: 'application/vnd.github+json',
+    },
+    body: JSON.stringify({ ref: 'main' }),
+  });
+  if (resp.ok) log('🚀 ワークフロー起動。1〜2分後にLINE通知が届きます。');
+  else log(`❌ 起動失敗 ${resp.status}: ${await resp.text()}`);
+}
+
+document.getElementById('save').onclick = saveToRepo;
+document.getElementById('test').onclick = runNow;
+init();
+</script>
+</body>
+</html>
