@@ -52,6 +52,7 @@ stock-morning-line/
 │   ├── check_alerts.py     # 損切利確チェック
 │   ├── news_fetch.py       # RSS収集(Yahoo/ロイター/NHK/株探)
 │   ├── stock_data.py       # yfinance(日米指数+為替+商品)
+│   ├── stock_universe.py   # 主要日本株100銘柄候補(ハルシネーション防止)
 │   ├── gemini_client.py    # Gemini 2.5 Flash + フォールバック
 │   ├── line_client.py      # LINE broadcast(改行境界で分割)
 │   ├── trading_day.py      # 東証営業日判定(jpholiday使用)
@@ -83,6 +84,7 @@ stock-morning-line/
 - ✅ LINEリッチメニュー：朝ニュース・保有銘柄・今すぐ配信
 - ✅ 設定画面：PCでもスマホでも編集可（PATは端末保存）
 - ✅ 例外日付：`config/settings.json` の `allowed_weekends` / `allowed_dates` で強制配信可
+- ✅ **架空銘柄防止**：scripts/stock_universe.py の主要108銘柄ユニバースから候補を絞ってGeminiに渡す。AIはこのリストからのみ選ぶ。後処理で4桁コード正規表現チェック→候補外なら警告メッセージ追記
 
 ## 6. 既知の制約・TODO
 
