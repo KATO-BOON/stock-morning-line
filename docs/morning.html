@@ -11,21 +11,13 @@
 <h1>📰 朝ニュース設定</h1>
 
 <div class="card">
-  <strong>1. 予算（1回の購入の目安）</strong>
-  <div class="muted">例: 10万円 → 株価1,000円で100株 / 500円で200株</div>
+  <strong>1. 予算（100株単位で買える銘柄を推奨）</strong>
+  <div class="muted">例: 10万円 → 株価1,000円以下の銘柄を100株<br>例: 50万円 → 株価5,000円以下の銘柄を100株</div>
   <div class="budget" id="budget-buttons"></div>
 </div>
 
 <div class="card">
-  <strong>2. 単元未満株</strong>
-  <div class="toggle">
-    <input type="checkbox" id="odd-lots" />
-    <label for="odd-lots" style="margin:0;">1株から購入する（SBI/楽天など）</label>
-  </div>
-</div>
-
-<div class="card">
-  <strong>3. 今週末も配信する</strong>
+  <strong>2. 今週末も配信する</strong>
   <div class="toggle">
     <input type="checkbox" id="weekend" />
     <label for="weekend" style="margin:0;">2026-04-25〜04-26 の土日も配信</label>
@@ -33,7 +25,7 @@
 </div>
 
 <div class="card">
-  <strong>4. GitHub PAT（端末ごとに1回）</strong>
+  <strong>3. GitHub PAT（端末ごとに1回）</strong>
   <div class="muted">PATは端末のブラウザに保存され外部送信されません</div>
   <input type="password" id="gh-pat" placeholder="ghp_..." />
 </div>
@@ -66,14 +58,12 @@ function renderBudget() {
 }
 
 function init() {
-  document.getElementById('odd-lots').checked = s.allow_odd_lots !== false;
   document.getElementById('weekend').checked = !!(s.allowed_weekends && s.allowed_weekends.length);
   if (s.gh_pat) document.getElementById('gh-pat').value = s.gh_pat;
   renderBudget();
 }
 
 document.getElementById('save').onclick = async () => {
-  s.allow_odd_lots = document.getElementById('odd-lots').checked;
   s.allowed_weekends = document.getElementById('weekend').checked ? ['2026-04-25','2026-04-26'] : [];
   s.gh_pat = document.getElementById('gh-pat').value.trim();
   if (!s.budget_man) { SML.log('予算ボタンを選んでください'); return; }
@@ -82,13 +72,13 @@ document.getElementById('save').onclick = async () => {
   try {
     await SML.patchRepoSettings({
       budget_man: s.budget_man,
-      allow_odd_lots: s.allow_odd_lots,
+      allow_odd_lots: false,
       allowed_weekends: s.allowed_weekends,
       max_news_chars: 220,
       important_news_max_chars: 400,
       include_links: true,
     }, `Update morning settings (budget=${s.budget_man}万, weekend=${s.allowed_weekends.length>0})`);
-    SML.log(`✅ 保存成功（予算 ${s.budget_man}万）`);
+    SML.log(`✅ 保存成功（予算 ${s.budget_man}万・100株単位推奨）`);
   } catch (e) { SML.log(`❌ ${e.message}`); }
 };
 

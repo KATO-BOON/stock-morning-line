@@ -65,7 +65,7 @@ def main() -> int:
         news=[n.to_dict() for n in news_items],
         max_news_chars=int(settings.get("max_news_chars", 220)),
         important_max_chars=int(settings.get("important_news_max_chars", 400)),
-        allow_odd_lots=bool(settings.get("allow_odd_lots", True)),
+        allow_odd_lots=False,  # 100株単位固定（ミニ株推奨禁止）
     )
 
     print("[info] LINE送信中…")
