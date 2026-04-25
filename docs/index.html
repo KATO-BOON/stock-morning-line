@@ -170,6 +170,16 @@ async function runNow() {
 document.getElementById('save').onclick = saveToRepo;
 document.getElementById('test').onclick = runNow;
 init();
+
+// URL ?auto=run で自動配信トリガー
+if (new URLSearchParams(location.search).get('auto') === 'run') {
+  if (state.gh_pat) {
+    log('自動配信をキック中...');
+    runNow();
+  } else {
+    log('初回は手動でPATを入力して「今すぐ配信テスト」を押してください');
+  }
+}
 </script>
 </body>
 </html>
