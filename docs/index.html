@@ -5,22 +5,29 @@
 <title>株通知 設定</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <style>
-  :root { --g:#06c755; --bg:#f5f7f9; }
+  :root { --g:#06c755; --bg:#f5f7f9; --r:#e74c3c; --b:#3498db; }
   * { box-sizing:border-box; }
-  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Meiryo,sans-serif; background:var(--bg); color:#111; padding:16px; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Meiryo,sans-serif; background:var(--bg); color:#111; padding:16px; max-width:680px; margin:0 auto; }
   h1 { font-size:20px; margin:0 0 12px; }
   .card { background:#fff; border-radius:10px; padding:16px; margin-bottom:14px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
   .muted { color:#666; font-size:13px; margin-top:4px; }
   .budget { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:8px; }
   .budget button { padding:16px 0; font-size:18px; border:2px solid #ddd; background:#fff; border-radius:8px; cursor:pointer; }
   .budget button.active { background:var(--g); color:#fff; border-color:var(--g); }
-  input[type=text], input[type=password] { width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; font-size:14px; }
+  input[type=text], input[type=password], input[type=number] { width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; font-size:14px; }
   label { display:block; font-size:13px; color:#333; margin-top:10px; }
   .row { display:flex; gap:8px; align-items:center; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .grid4 { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:6px; }
   button.primary { padding:12px 18px; background:var(--g); color:#fff; border:0; border-radius:6px; font-size:15px; cursor:pointer; }
-  button.primary:disabled { opacity:.5; }
-  .log { font-family:ui-monospace,Consolas,monospace; font-size:12px; white-space:pre-wrap; color:#333; background:#fafafa; padding:10px; border-radius:6px; max-height:200px; overflow:auto; }
+  button.danger { padding:6px 12px; background:#fff; color:var(--r); border:1px solid var(--r); border-radius:5px; font-size:13px; cursor:pointer; }
+  button.sec { padding:8px 14px; background:#fff; color:#333; border:1px solid #ccc; border-radius:6px; font-size:14px; cursor:pointer; }
+  .holding { padding:10px; border:1px solid #eee; border-radius:8px; margin-bottom:8px; background:#fafafa; }
+  .holding h4 { margin:0 0 6px; font-size:15px; }
+  .log { font-family:ui-monospace,Consolas,monospace; font-size:12px; white-space:pre-wrap; color:#333; background:#fafafa; padding:10px; border-radius:6px; max-height:160px; overflow:auto; }
   .toggle { display:inline-flex; align-items:center; gap:6px; margin-top:8px; }
+  .badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; background:#eef; color:#446; }
+  .row-end { display:flex; justify-content:flex-end; gap:6px; }
 </style>
 </head>
 <body>
@@ -28,7 +35,7 @@
 
 <div class="card">
   <strong>1. 予算（1回の購入の目安）</strong>
-  <div class="muted">例: 10万円 → 株価1,000円で100株 / 500円で200株 など</div>
+  <div class="muted">例: 10万円 → 株価1,000円で100株 / 500円で200株</div>
   <div class="budget" id="budget-buttons"></div>
 </div>
 
@@ -36,21 +43,64 @@
   <strong>2. 単元未満株</strong>
   <div class="toggle">
     <input type="checkbox" id="odd-lots" />
-    <label for="odd-lots" style="margin:0;">SBI/楽天などで1株から買える（推奨: オン）</label>
+    <label for="odd-lots" style="margin:0;">1株から購入する（SBI/楽天など）</label>
   </div>
 </div>
 
 <div class="card">
-  <strong>3. 今週末も配信する（土日）</strong>
+  <strong>3. 今週末も配信する</strong>
   <div class="toggle">
     <input type="checkbox" id="weekend" />
-    <label for="weekend" style="margin:0;">2026-04-25〜2026-04-26 の土日も配信</label>
+    <label for="weekend" style="margin:0;">2026-04-25〜04-26 の土日も配信</label>
   </div>
 </div>
 
 <div class="card">
-  <strong>4. GitHub接続情報（初回のみ）</strong>
-  <div class="muted">設定をリポジトリに保存するのに必要。PATはブラウザに保存され、外部送信されません。</div>
+  <strong>4. 保有銘柄（損切・利確の自動アラート）</strong>
+  <div class="muted">市場時間中（9:00-15:30）10分ごとにチェックし、ライン突破でLINE通知</div>
+  <div id="holdings-list"></div>
+  <div style="margin-top:10px;">
+    <strong>新規追加</strong>
+    <div class="grid2">
+      <div>
+        <label>証券コード（4桁）</label>
+        <input type="text" id="h-code" placeholder="7201" maxlength="5" />
+      </div>
+      <div>
+        <label>銘柄名</label>
+        <input type="text" id="h-name" placeholder="日産自動車" />
+      </div>
+    </div>
+    <div class="grid2">
+      <div>
+        <label>株数</label>
+        <input type="number" id="h-shares" placeholder="100" min="1" />
+      </div>
+      <div>
+        <label>取得単価（円）</label>
+        <input type="number" id="h-avg" placeholder="502" step="0.5" />
+      </div>
+    </div>
+    <div class="grid2">
+      <div>
+        <label>損切ライン（円）</label>
+        <input type="number" id="h-sl" placeholder="480" step="0.5" />
+      </div>
+      <div>
+        <label>利確ライン（円）</label>
+        <input type="number" id="h-tp" placeholder="540" step="0.5" />
+      </div>
+    </div>
+    <div style="margin-top:10px;">
+      <button class="sec" id="add-h">＋ 追加（一旦バッファ）</button>
+      <span class="muted">追加後、下の「設定を保存」で確定</span>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <strong>5. GitHub接続情報</strong>
+  <div class="muted">PATは端末のブラウザに保存され外部送信されません。端末ごとに1回入力。</div>
   <label>GitHub username</label>
   <input type="text" id="gh-user" value="KATO-BOON" />
   <label>Repo</label>
@@ -61,7 +111,8 @@
 
 <div class="row">
   <button class="primary" id="save">設定を保存</button>
-  <button id="test" style="padding:12px 18px;border-radius:6px;border:1px solid #ccc;background:#fff;cursor:pointer;">今すぐ配信テスト</button>
+  <button class="sec" id="test">今すぐ朝のブリーフ配信</button>
+  <button class="sec" id="check">保有銘柄チェック</button>
 </div>
 
 <div class="card" style="margin-top:14px;">
@@ -72,6 +123,7 @@
 <script>
 const BUDGETS = [5, 10, 20, 30, 50, 100];
 let state = JSON.parse(localStorage.getItem('stock-morning-line') || '{}');
+state.holdings = state.holdings || [];
 
 function log(msg) {
   const el = document.getElementById('log');
@@ -91,11 +143,62 @@ function renderBudget() {
   });
 }
 
+function renderHoldings() {
+  const wrap = document.getElementById('holdings-list');
+  wrap.innerHTML = '';
+  if (!state.holdings.length) {
+    wrap.innerHTML = '<div class="muted">保有銘柄なし</div>';
+    return;
+  }
+  state.holdings.forEach((h, i) => {
+    const div = document.createElement('div');
+    div.className = 'holding';
+    div.innerHTML = `
+      <h4>${h.code} ${h.name} <span class="badge">${h.shares}株</span></h4>
+      <div class="muted">取得 ${h.avg_price}円 / 損切 ${h.stop_loss || '-'}円 / 利確 ${h.take_profit || '-'}円</div>
+      <div class="row-end">
+        <button class="danger" data-i="${i}">売却済（削除）</button>
+      </div>
+    `;
+    wrap.appendChild(div);
+  });
+  wrap.querySelectorAll('button.danger').forEach(b => {
+    b.onclick = () => {
+      const i = parseInt(b.dataset.i);
+      if (confirm(`${state.holdings[i].name} を削除（売却処理）しますか？`)) {
+        state.holdings.splice(i, 1);
+        renderHoldings();
+      }
+    };
+  });
+}
+
+function addHolding() {
+  const code = document.getElementById('h-code').value.trim();
+  const name = document.getElementById('h-name').value.trim();
+  const shares = parseInt(document.getElementById('h-shares').value);
+  const avg = parseFloat(document.getElementById('h-avg').value);
+  const sl = parseFloat(document.getElementById('h-sl').value);
+  const tp = parseFloat(document.getElementById('h-tp').value);
+  if (!code || !name || !shares || !avg) { log('コード・名前・株数・取得単価は必須'); return; }
+  state.holdings.push({
+    id: `${code}-${Date.now()}`,
+    code, name, shares, avg_price: avg,
+    stop_loss: isNaN(sl) ? 0 : sl,
+    take_profit: isNaN(tp) ? 0 : tp,
+    added_at: new Date().toISOString(),
+  });
+  ['h-code','h-name','h-shares','h-avg','h-sl','h-tp'].forEach(id => document.getElementById(id).value = '');
+  renderHoldings();
+  log(`✅ ${name} 追加（保存ボタンで確定）`);
+}
+
 function init() {
   document.getElementById('odd-lots').checked = state.allow_odd_lots !== false;
   document.getElementById('weekend').checked = !!(state.allowed_weekends && state.allowed_weekends.length);
   if (state.gh_pat) document.getElementById('gh-pat').value = state.gh_pat;
   renderBudget();
+  renderHoldings();
 }
 
 function readForm() {
@@ -118,67 +221,55 @@ async function saveToRepo() {
   log('現在のsettings.jsonを取得中…');
   let sha;
   const getResp = await fetch(url, { headers: { Authorization: `token ${state.gh_pat}` } });
-  if (getResp.status === 200) {
-    sha = (await getResp.json()).sha;
-  } else if (getResp.status !== 404) {
-    log(`GET失敗 ${getResp.status}`); return;
-  }
+  if (getResp.status === 200) sha = (await getResp.json()).sha;
+  else if (getResp.status !== 404) { log(`GET失敗 ${getResp.status}`); return; }
 
   const body = {
     budget_man: state.budget_man,
     allow_odd_lots: state.allow_odd_lots,
     allowed_weekends: state.allowed_weekends,
-    indices: ["^N225","^TOPX"],
+    indices: ["^N225","1306.T"],
     max_news_chars: 220,
     important_news_max_chars: 400,
-    include_links: true
+    include_links: true,
+    holdings: state.holdings || []
   };
   const content = btoa(unescape(encodeURIComponent(JSON.stringify(body, null, 2))));
   const putResp = await fetch(url, {
     method: 'PUT',
-    headers: {
-      Authorization: `token ${state.gh_pat}`,
-      'Content-Type': 'application/json',
-    },
+    headers: { Authorization: `token ${state.gh_pat}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      message: `Update settings (budget=${state.budget_man}万, weekend=${state.allowed_weekends.length>0})`,
-      content,
-      sha,
+      message: `Update settings (budget=${state.budget_man}万, holdings=${state.holdings.length})`,
+      content, sha,
     }),
   });
-  if (putResp.ok) log(`✅ 保存成功（budget=${state.budget_man}万）`);
+  if (putResp.ok) log(`✅ 保存成功（予算${state.budget_man}万 / 保有${state.holdings.length}銘柄）`);
   else log(`❌ 保存失敗 ${putResp.status}: ${await putResp.text()}`);
 }
 
-async function runNow() {
+async function dispatch(workflow) {
   readForm();
   if (!state.gh_pat) { log('GitHub PATが未入力'); return; }
-  const url = `https://api.github.com/repos/${state.gh_user}/${state.gh_repo}/actions/workflows/morning.yml/dispatches`;
+  const url = `https://api.github.com/repos/${state.gh_user}/${state.gh_repo}/actions/workflows/${workflow}/dispatches`;
   const resp = await fetch(url, {
     method: 'POST',
-    headers: {
-      Authorization: `token ${state.gh_pat}`,
-      'Content-Type': 'application/json',
-      Accept: 'application/vnd.github+json',
-    },
+    headers: { Authorization: `token ${state.gh_pat}`, 'Content-Type': 'application/json', Accept: 'application/vnd.github+json' },
     body: JSON.stringify({ ref: 'main' }),
   });
-  if (resp.ok) log('🚀 ワークフロー起動。1〜2分後にLINE通知が届きます。');
-  else log(`❌ 起動失敗 ${resp.status}: ${await resp.text()}`);
+  if (resp.ok) log(`🚀 ${workflow} 起動。1〜2分後にLINE通知`);
+  else log(`❌ ${workflow} 起動失敗 ${resp.status}: ${await resp.text()}`);
 }
 
 document.getElementById('save').onclick = saveToRepo;
-document.getElementById('test').onclick = runNow;
+document.getElementById('test').onclick = () => dispatch('morning.yml');
+document.getElementById('check').onclick = () => dispatch('price-alert.yml');
+document.getElementById('add-h').onclick = addHolding;
 init();
 
 // URL ?auto=run で自動配信トリガー
 if (new URLSearchParams(location.search).get('auto') === 'run') {
-  if (state.gh_pat) {
-    log('自動配信をキック中...');
-    runNow();
-  } else {
-    log('初回は手動でPATを入力して「今すぐ配信テスト」を押してください');
-  }
+  if (state.gh_pat) { log('自動配信をキック中...'); dispatch('morning.yml'); }
+  else { log('初回は手動でPATを入力して「今すぐ配信」を押してください'); }
 }
 </script>
 </body>
