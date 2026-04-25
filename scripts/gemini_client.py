@@ -1,12 +1,15 @@
-"""Gemini APIクライアント。朝のまとめを生成する。"""
+"""Gemini APIクライアント。朝のモーニングブリーフィングを生成する。"""
 from __future__ import annotations
 
 import json
 import os
 import time
+from datetime import datetime, timedelta, timezone
 from typing import List
 
 import requests
+
+JST = timezone(timedelta(hours=9))
 
 # 優先順にモデル名を並べる。最初が429なら次をリトライ。
 MODEL_FALLBACKS = [
@@ -21,67 +24,122 @@ def _endpoint(model: str) -> str:
     return f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 
 
+def _fmt_snap(s: dict) -> str:
+    sign = "+" if s["change_pct"] >= 0 else ""
+    return (
+        f"{s['name']}: {s['prev_close']:,.2f} "
+        f"({sign}{s['change_pct']:.2f}%) / "
+        f"予想レンジ {s['range_low']:,.0f}〜{s['range_high']:,.0f}"
+    )
+
+
 def _build_prompt(
     budget_man: int,
-    indices: list,
-    news: list,
+    snapshots: list[dict],
+    news: list[dict],
     max_news_chars: int,
     important_max_chars: int,
     allow_odd_lots: bool,
 ) -> str:
-    idx_txt = "\n".join(
-        f"- {s['name']}({s['symbol']}): 前日終値 {s['prev_close']:,.2f} / "
-        f"予想レンジ {s['range_low']:,.0f}〜{s['range_high']:,.0f} / "
-        f"20日レンジ {s['low_20d']:,.0f}〜{s['high_20d']:,.0f}"
-        for s in indices
-    )
+    today = datetime.now(JST)
+    date_str = today.strftime("%Y-%m-%d(%a)")
+    weekday_jp = ["月", "火", "水", "木", "金", "土", "日"][today.weekday()]
+
+    by_cat: dict[str, list] = {}
+    for s in snapshots:
+        by_cat.setdefault(s["category"], []).append(s)
+
+    jp = "\n".join(_fmt_snap(s) for s in by_cat.get("jp_index", []))
+    us = "\n".join(_fmt_snap(s) for s in by_cat.get("us_index", []))
+    fx = "\n".join(_fmt_snap(s) for s in by_cat.get("fx", []))
+    comm = "\n".join(_fmt_snap(s) for s in by_cat.get("commodity", []))
 
     news_txt = "\n".join(
-        f"- [{n['source']}] {n['title']} {n['link']} | {n['summary'][:200]}"
-        for n in news[:20]
+        f"- [{n['source']}] {n['title']}\n  要約: {n['summary'][:180]}\n  URL: {n['link']}"
+        for n in news[:25]
     )
 
-    lot_hint = "単元未満株（1株）購入可" if allow_odd_lots else "単元株(100株)購入想定"
+    lot_hint = "単元未満株(1株から)購入可" if allow_odd_lots else "単元株(100株)で購入"
     budget_yen = budget_man * 10000
 
-    return f"""あなたは日本株専門のマーケットアナリストです。以下の情報をもとに、
-朝の8時にLINE通知で送る短いマーケットブリーフィングを作成してください。
+    return f"""あなたは日本株マーケットの専門アナリストです。
+以下のデータから、本日{date_str.replace('Mon','月曜').replace('Tue','火曜').replace('Wed','水曜').replace('Thu','木曜').replace('Fri','金曜').replace('Sat','土曜').replace('Sun','日曜')}の朝のLINEモーニングブリーフィングを作成してください。
+読者は個人投資家1名。予算は{budget_man}万円({budget_yen:,}円)、{lot_hint}。
 
-【予算】{budget_man}万円({budget_yen:,}円) / {lot_hint}
+━━━━━ 入力データ ━━━━━
 
-【主要指数スナップショット】
-{idx_txt}
+【日本市場 前日終値】
+{jp}
 
-【直近の関連ニュース】
+【米国市場 前日終値】
+{us}
+
+【為替 前日終値】
+{fx}
+
+【商品市況 前日終値】
+{comm}
+
+【関連ニュース（直近18時間以内）】
 {news_txt}
 
-以下のフォーマットで出力してください（絵文字・記号は最小限、LINEメッセージ向けに読みやすく）:
+━━━━━ 出力仕様 ━━━━━
+
+以下のフォーマットで、**LINEメッセージとして読みやすく**出力してください。
+絵文字は各セクション冒頭にのみ使用（過剰使用しない）。
+記号の罫線は「━━━」を使う。
+重要な数字は太字風に（**使わず**、代わりに改行で目立たせる）。
 
 ━━━━━━━━━━━━━━━━
-📈 {{日付}}(曜日) モーニングブリーフ
+📊 {today.strftime('%-m月%-d日')}({weekday_jp}) モーニングブリーフ
 ━━━━━━━━━━━━━━━━
-■ 相場サマリー（{max_news_chars}字以内）
-（円相場・米株動向・日経平均の想定レンジを含め簡潔に）
 
-■ 前日終値＋予想レンジ
-・日経平均: {{値}}円 ／ 予想 {{下}}〜{{上}}
-・TOPIX  : {{値}} ／ 予想 {{下}}〜{{上}}
+🌏 海外市場サマリー
+（NYダウ・ナスダック・S&P500・SOXの動向、主要材料を200字程度で）
 
-■ 注目ニュース（最大4件・{max_news_chars}字程度。重要なものは最大{important_max_chars}字まで可）
-① {{見出し}} / 要約 / リンク
+💴 為替・商品
+ドル円: XXX円台(前日比+/-X.XX)
+原油・金: 簡潔に
+
+📈 日経平均 本日の展望
+前日終値: XX,XXX円(+/-X.XX%)
+予想レンジ: XX,XXX〜XX,XXX円
+想定シナリオ: （寄付動向の予想、上振れ/下振れ要因を120字程度）
+
+📰 重要ニュース3〜4件
+① 【見出し】
+   簡潔な要約(150〜{max_news_chars}字、重要なものは最大{important_max_chars}字)
+   日本株への影響: (1行)
+   URL: [記事リンク]
+
 ② ...
 
-■ 注目銘柄（予算{budget_man}万円で買える日本株3銘柄）
-・{{銘柄コード 銘柄名}}: 株価◯円／推奨理由（1行）
-（※ 投資判断はご自身の責任で）
+🎯 本日の注目銘柄（予算{budget_man}万円）
+選定理由の根拠となる今朝のニュース・業績・テーマに基づき、3〜5銘柄。
 
-本文のみ出力してください。JSONやコードブロックは不要です。日付は本日(JST)で記入してください。
+① 銘柄コード 銘柄名
+   株価 XXX円 | {lot_hint}
+   選定理由: (2〜3行。具体的な材料、直近決算、テーマとの関連を明記)
+   想定: エントリー目安/利確目安
+
+② ...
+
+⚠️ 本日のリスク要因
+- 箇条書き2〜3個（FOMC、決算、地政学、為替急変など）
+
+💡 朝の一言
+1文。本日のマーケットへの向き合い方アドバイス。
+
+━━━━━━━━━━━━━━━━
+※ 情報提供のみ、投資判断はご自身で。
+
+本文のみ出力。JSON・コードブロック・前置き不要。
 """
 
 
 def summarize(
     budget_man: int,
-    indices: list[dict],
+    snapshots: list[dict],
     news: list[dict],
     max_news_chars: int = 220,
     important_max_chars: int = 400,
@@ -94,7 +152,7 @@ def summarize(
 
     prompt = _build_prompt(
         budget_man=budget_man,
-        indices=indices,
+        snapshots=snapshots,
         news=news,
         max_news_chars=max_news_chars,
         important_max_chars=important_max_chars,
@@ -103,7 +161,7 @@ def summarize(
 
     last_err = None
     tried = []
-    for model in dict.fromkeys(MODEL_FALLBACKS):  # 重複排除
+    for model in dict.fromkeys(MODEL_FALLBACKS):
         tried.append(model)
         try:
             resp = requests.post(
@@ -112,26 +170,26 @@ def summarize(
                 json={
                     "contents": [{"parts": [{"text": prompt}]}],
                     "generationConfig": {
-                        "temperature": 0.6,
-                        "maxOutputTokens": 1600,
+                        "temperature": 0.7,
+                        "maxOutputTokens": 3000,
                     },
                 },
-                timeout=60,
+                timeout=90,
             )
             if resp.status_code == 429:
-                print(f"[warn] {model} 429 Too Many Requests -> next model")
+                print(f"[warn] {model} 429 -> next model")
                 time.sleep(2)
                 last_err = f"{model} 429"
                 continue
             if resp.status_code == 404:
-                print(f"[warn] {model} 404 Not Found -> next model")
+                print(f"[warn] {model} 404 -> next model")
                 last_err = f"{model} 404"
                 continue
             resp.raise_for_status()
             data = resp.json()
             try:
                 text = data["candidates"][0]["content"]["parts"][0]["text"].strip()
-                print(f"[ok] モデル {model} で応答成功")
+                print(f"[ok] モデル {model} 応答成功")
                 return text
             except (KeyError, IndexError):
                 last_err = f"解析失敗 {model}: {json.dumps(data)[:300]}"

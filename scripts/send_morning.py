@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from gemini_client import summarize
 from line_client import broadcast
 from news_fetch import fetch_news
-from stock_data import all_indices
+from stock_data import all_snapshots
 
 JST = timezone(timedelta(hours=9))
 ROOT = Path(__file__).resolve().parent.parent
@@ -42,14 +42,14 @@ def main() -> int:
     news_items = fetch_news()
     print(f"[info] ニュース {len(news_items)} 件")
 
-    print("[info] 株価指数スナップショット取得中…")
-    indices = all_indices(settings.get("indices", ["^N225", "^TOPX"]))
-    print(f"[info] 指数 {len(indices)} 件")
+    print("[info] マーケットスナップショット取得中(日米指数・為替・商品)…")
+    snaps = all_snapshots()
+    print(f"[info] スナップショット {len(snaps)} 件")
 
     print("[info] Gemini要約中…")
     message = summarize(
         budget_man=int(settings.get("budget_man", 10)),
-        indices=[s.to_dict() for s in indices],
+        snapshots=[s.to_dict() for s in snaps],
         news=[n.to_dict() for n in news_items],
         max_news_chars=int(settings.get("max_news_chars", 220)),
         important_max_chars=int(settings.get("important_news_max_chars", 400)),

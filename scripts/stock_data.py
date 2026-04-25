@@ -1,4 +1,4 @@
-"""日経平均・TOPIXの前日終値と予想レンジ（ATRベース）を算出。"""
+"""日本株・海外市場・為替・商品のスナップショット取得。"""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -8,14 +8,15 @@ import yfinance as yf
 
 
 @dataclass
-class IndexSnapshot:
+class Snapshot:
     symbol: str
     name: str
+    category: str  # "jp_index", "us_index", "fx", "commodity", "sector"
     prev_close: float
+    change_pct: float
     high_20d: float
     low_20d: float
     atr14: float
-    # 予想レンジ = 前日終値 ± ATR14
     range_low: float
     range_high: float
 
@@ -23,7 +24,9 @@ class IndexSnapshot:
         return {
             "symbol": self.symbol,
             "name": self.name,
+            "category": self.category,
             "prev_close": round(self.prev_close, 2),
+            "change_pct": round(self.change_pct, 2),
             "high_20d": round(self.high_20d, 2),
             "low_20d": round(self.low_20d, 2),
             "atr14": round(self.atr14, 2),
@@ -32,15 +35,26 @@ class IndexSnapshot:
         }
 
 
-NAMES: Dict[str, str] = {
-    "^N225": "日経平均",
-    "1306.T": "TOPIX(ETF)",
-    "^TPX": "TOPIX",
-}
+# カテゴリ別シンボル定義
+TARGETS: list[tuple[str, str, str]] = [
+    # 日本市場
+    ("^N225", "日経平均", "jp_index"),
+    ("1306.T", "TOPIX(ETF)", "jp_index"),
+    # 米国市場
+    ("^DJI", "NYダウ", "us_index"),
+    ("^IXIC", "ナスダック", "us_index"),
+    ("^GSPC", "S&P500", "us_index"),
+    ("^SOX", "フィラデルフィア半導体(SOX)", "us_index"),
+    # 為替
+    ("JPY=X", "ドル円", "fx"),
+    ("EURJPY=X", "ユーロ円", "fx"),
+    # 商品
+    ("CL=F", "WTI原油", "commodity"),
+    ("GC=F", "金", "commodity"),
+]
 
 
 def _atr(hist, period: int = 14) -> float:
-    """Average True Range (簡易)"""
     high = hist["High"]
     low = hist["Low"]
     close_prev = hist["Close"].shift(1)
@@ -50,21 +64,24 @@ def _atr(hist, period: int = 14) -> float:
     return float(tr.tail(period).mean())
 
 
-def snapshot(symbol: str) -> IndexSnapshot | None:
+def snapshot(symbol: str, name: str, category: str) -> Snapshot | None:
     try:
         hist = yf.Ticker(symbol).history(period="40d", interval="1d", auto_adjust=False)
-        # 当日データが未確定(NaN)な場合があるので除外
         hist = hist.dropna(subset=["Close"])
         if hist.empty or len(hist) < 15:
             return None
         prev_close = float(hist["Close"].iloc[-1])
+        prev_prev = float(hist["Close"].iloc[-2]) if len(hist) >= 2 else prev_close
+        change_pct = (prev_close - prev_prev) / prev_prev * 100 if prev_prev else 0.0
         high_20d = float(hist["High"].tail(20).max())
         low_20d = float(hist["Low"].tail(20).min())
         atr14 = _atr(hist, 14)
-        return IndexSnapshot(
+        return Snapshot(
             symbol=symbol,
-            name=NAMES.get(symbol, symbol),
+            name=name,
+            category=category,
             prev_close=prev_close,
+            change_pct=change_pct,
             high_20d=high_20d,
             low_20d=low_20d,
             atr14=atr14,
@@ -76,10 +93,10 @@ def snapshot(symbol: str) -> IndexSnapshot | None:
         return None
 
 
-def all_indices(symbols) -> list[IndexSnapshot]:
+def all_snapshots() -> list[Snapshot]:
     result = []
-    for s in symbols:
-        snap = snapshot(s)
+    for sym, name, cat in TARGETS:
+        snap = snapshot(sym, name, cat)
         if snap:
             result.append(snap)
     return result
@@ -87,5 +104,5 @@ def all_indices(symbols) -> list[IndexSnapshot]:
 
 if __name__ == "__main__":
     import json
-    for snap in all_indices(["^N225", "^TOPX"]):
+    for snap in all_snapshots():
         print(json.dumps(snap.to_dict(), ensure_ascii=False))
