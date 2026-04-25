@@ -65,7 +65,7 @@ def _build_prompt(
 
     return f"""あなたは日本株マーケットの専門アナリストです。
 以下のデータから、本日{date_str.replace('Mon','月曜').replace('Tue','火曜').replace('Wed','水曜').replace('Thu','木曜').replace('Fri','金曜').replace('Sat','土曜').replace('Sun','日曜')}の朝のLINEモーニングブリーフィングを作成してください。
-読者は個人投資家1名。予算は{budget_man}万円({budget_yen:,}円)、{lot_hint}。
+読者は個人投資家1名。予算は{budget_man}万円({budget_yen:,}円)、**100株単位で買える銘柄のみ推奨**(ミニ株禁止)。
 
 ━━━━━ 入力データ ━━━━━
 
