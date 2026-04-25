@@ -9,6 +9,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from gemini_client import summarize
+from holdings_analysis import analyze_holdings
 from line_client import broadcast
 from news_fetch import fetch_news
 from stock_data import all_snapshots
@@ -63,12 +64,21 @@ def main() -> int:
     print(f"[info] 予算{budget_man}万円の候補銘柄取得中…")
     candidates = fetch_candidates(budget_man)
 
+    holdings = settings.get("holdings", [])
+    if holdings:
+        print(f"[info] 保有{len(holdings)}銘柄の動向分析中…")
+        h_briefs = analyze_holdings(holdings, news_items)
+        h_briefs_dict = [b.to_dict() for b in h_briefs]
+    else:
+        h_briefs_dict = []
+
     print("[info] Gemini要約中…")
     message = summarize(
         budget_man=budget_man,
         snapshots=[s.to_dict() for s in snaps],
         news=[n.to_dict() for n in news_items],
         candidates=[c.to_dict() for c in candidates],
+        holdings_briefs=h_briefs_dict,
         max_news_chars=int(settings.get("max_news_chars", 220)),
         important_max_chars=int(settings.get("important_news_max_chars", 400)),
         allow_odd_lots=False,

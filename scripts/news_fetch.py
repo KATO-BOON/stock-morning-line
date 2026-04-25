@@ -11,18 +11,21 @@ import feedparser
 
 JST = timezone(timedelta(hours=9))
 
-# 主要RSSフィード（日本株・マーケット・トランプ/米国関連）
-FEEDS = [
-    # Yahoo!ニュース 経済
-    "https://news.yahoo.co.jp/rss/categories/business.xml",
-    # Yahoo!ニュース 国際（トランプ関連など）
-    "https://news.yahoo.co.jp/rss/categories/world.xml",
-    # 株探 注目株
-    "https://s.kabutan.jp/news/marketnews/?category=9&rss=on",
-    # ロイター ビジネス
-    "https://jp.reuters.com/rssFeed/businessNews",
-    # NHK 経済
-    "https://www3.nhk.or.jp/rss/news/cat5.xml",
+# 主要RSSフィード（信頼度別: high/medium/low）
+# 「high」を優先的に拾う設計
+FEEDS: list[tuple[str, str]] = [
+    # 信頼度: high（一次・伝統メディア）
+    ("https://www3.nhk.or.jp/rss/news/cat5.xml", "high"),                     # NHK経済
+    ("https://jp.reuters.com/rssFeed/businessNews", "high"),                  # ロイター
+    ("https://feeds.bloomberg.co.jp/rss/japan-markets-news.xml", "high"),     # Bloomberg JP
+    ("https://toyokeizai.net/list/feed/rss", "high"),                         # 東洋経済
+    ("https://diamond.jp/list/feed/all_rss", "high"),                         # ダイヤモンド
+    # 信頼度: medium（金融特化・株専門）
+    ("https://s.kabutan.jp/news/marketnews/?category=9&rss=on", "medium"),    # 株探
+    ("https://minkabu.jp/news/news.rss", "medium"),                           # みんかぶ
+    # 信頼度: low（一般アグリゲーター・タブロイドが混じる）
+    ("https://news.yahoo.co.jp/rss/categories/business.xml", "low"),          # Yahoo!経済
+    ("https://news.yahoo.co.jp/rss/categories/world.xml", "low"),             # Yahoo!国際
 ]
 
 # 日本株・マーケットに関連しそうなキーワード
@@ -41,6 +44,7 @@ class NewsItem:
     link: str
     published: datetime | None
     source: str
+    reliability: str = "medium"  # high/medium/low
 
     def to_dict(self) -> dict:
         return {
@@ -49,6 +53,7 @@ class NewsItem:
             "link": self.link,
             "published": self.published.isoformat() if self.published else None,
             "source": self.source,
+            "reliability": self.reliability,
         }
 
 
@@ -70,12 +75,15 @@ def _parse_published(entry) -> datetime | None:
     return None
 
 
+_REL_RANK = {"high": 0, "medium": 1, "low": 2}
+
+
 def fetch_news(hours: int = 18, max_per_feed: int = 15, max_total: int = 25) -> List[NewsItem]:
-    """直近`hours`時間以内の日本株関連ニュースを収集。"""
+    """直近`hours`時間以内の日本株関連ニュースを収集。信頼度高い順に優先。"""
     cutoff = datetime.now(JST) - timedelta(hours=hours)
     collected: List[NewsItem] = []
 
-    for feed_url in FEEDS:
+    for feed_url, reliability in FEEDS:
         try:
             fp = feedparser.parse(feed_url)
         except Exception as e:
@@ -104,19 +112,36 @@ def fetch_news(hours: int = 18, max_per_feed: int = 15, max_total: int = 25) -> 
                     link=link,
                     published=published,
                     source=source,
+                    reliability=reliability,
                 )
             )
             count += 1
 
-    # 新しい順にソートして重複タイトル排除
+    # 重複タイトル排除→信頼度→新しい順
     seen = set()
-    dedup = []
-    for item in sorted(collected, key=lambda x: x.published or datetime.min.replace(tzinfo=JST), reverse=True):
+    dedup: list[NewsItem] = []
+    for item in sorted(
+        collected,
+        key=lambda x: (
+            _REL_RANK.get(x.reliability, 9),
+            -(x.published.timestamp() if x.published else 0),
+        ),
+    ):
         if item.title in seen:
             continue
         seen.add(item.title)
         dedup.append(item)
     return dedup[:max_total]
+
+
+def filter_by_keywords(items: list[NewsItem], keywords: list[str]) -> list[NewsItem]:
+    """銘柄名・コード等のキーワードを含むニュースのみ抽出。"""
+    matched = []
+    for it in items:
+        blob = f"{it.title} {it.summary}"
+        if any(k in blob for k in keywords):
+            matched.append(it)
+    return matched
 
 
 if __name__ == "__main__":

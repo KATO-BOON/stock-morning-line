@@ -38,6 +38,7 @@ def _build_prompt(
     snapshots: list[dict],
     news: list[dict],
     candidates: list[dict],
+    holdings_briefs: list[dict],
     max_news_chars: int,
     important_max_chars: int,
     allow_odd_lots: bool,
@@ -55,10 +56,36 @@ def _build_prompt(
     fx = "\n".join(_fmt_snap(s) for s in by_cat.get("fx", []))
     comm = "\n".join(_fmt_snap(s) for s in by_cat.get("commodity", []))
 
+    def _rel_mark(r: str) -> str:
+        return {"high": "🟢", "medium": "🟡", "low": "🟠"}.get(r, "")
+
     news_txt = "\n".join(
-        f"- [{n['source']}] {n['title']}\n  要約: {n['summary'][:180]}\n  URL: {n['link']}"
+        f"- {_rel_mark(n.get('reliability','medium'))}[{n['source']}] {n['title']}\n  要約: {n['summary'][:180]}\n  URL: {n['link']}"
         for n in news[:25]
     )
+
+    # 保有銘柄ブロック
+    if holdings_briefs:
+        h_lines = []
+        for b in holdings_briefs:
+            news_lines = "\n      ".join(
+                f"・{_rel_mark(n.get('reliability','medium'))}[{n['source']}] {n['title']}"
+                for n in b.get("related_news", [])[:3]
+            ) or "・関連ニュースなし"
+            pct5 = f"{b['pct_5d']:+.2f}%" if b.get("pct_5d") is not None else "?"
+            pnl_pct = f"{b['pnl_pct']:+.2f}%" if b.get("pnl_pct") is not None else "?"
+            pnl_total = f"{b['pnl_total']:+,.0f}円" if b.get("pnl_total") is not None else "?"
+            latest = f"{b['latest_close']:,.0f}円" if b.get("latest_close") else "?"
+            er = f"次回決算: {b['next_earnings']}" if b.get("next_earnings") else "次回決算: 不明"
+            h_lines.append(
+                f"  ▼ {b['code']} {b['name']} ({b['shares']}株 取得{b['avg_price']:,.0f}円)\n"
+                f"    最新値: {latest} / 5日変化: {pct5} / 評価損益: {pnl_total}({pnl_pct})\n"
+                f"    損切{b['stop_loss']:,.0f}円 / 利確{b['take_profit']:,.0f}円 / {er}\n"
+                f"    関連ニュース:\n      {news_lines}"
+            )
+        holdings_txt = "\n".join(h_lines)
+    else:
+        holdings_txt = ""
 
     cand_txt = "\n".join(
         f"  {c['code']} {c['name']}: 前日終値 {c['prev_close']:,}円 / 100株購入 {c['lot_total']:,}円"
@@ -87,11 +114,14 @@ def _build_prompt(
 【商品市況 前日終値】
 {comm}
 
-【関連ニュース（直近18時間以内）】
+【関連ニュース（直近18時間以内・🟢=高信頼/🟡=中/🟠=低）】
 {news_txt}
 
 【**推奨候補銘柄リスト（このリストの中からのみ選ぶこと・絶対に他銘柄を作らない**）】
 {cand_txt}
+
+【**ユーザー保有銘柄**（あれば下記の銘柄を必ず取り上げる）】
+{holdings_txt or "（保有なし）"}
 
 ━━━━━ 出力仕様 ━━━━━
 
@@ -117,12 +147,22 @@ def _build_prompt(
 想定シナリオ: （寄付動向の予想、上振れ/下振れ要因を120字程度）
 
 📰 重要ニュース3〜4件
-① 【見出し】
+信頼度高い(🟢)を優先。低信頼(🟠)は重要な独自情報のみ採用。
+① 【見出し】 [🟢/🟡/🟠]
    簡潔な要約(150〜{max_news_chars}字、重要なものは最大{important_max_chars}字)
    日本株への影響: (1行)
    URL: [記事リンク]
 
 ② ...
+
+📌 保有銘柄ウォッチ（保有がある場合のみ。保有なしならこのセクションは丸ごと省略）
+各銘柄について以下を必ず含める:
+- 評価損益と直近5日トレンド
+- 価格動向の解釈（モメンタム・調整・横ばい等）
+- 関連ニュースから読み取れる材料・リスク（あれば）
+- 次回決算前後の注意点（決算日が近い場合）
+- 損切/利確ラインへの距離感（◯%手前など）
+- 短期見通し（1〜2文。ホールド/警戒/利確検討等の具体的なアクション示唆）
 
 🎯 本日の注目銘柄（予算{budget_man}万円={budget_yen:,}円・**100株単位**）
 
@@ -164,6 +204,7 @@ def summarize(
     snapshots: list[dict],
     news: list[dict],
     candidates: list[dict] | None = None,
+    holdings_briefs: list[dict] | None = None,
     max_news_chars: int = 220,
     important_max_chars: int = 400,
     allow_odd_lots: bool = True,
@@ -178,6 +219,7 @@ def summarize(
         snapshots=snapshots,
         news=news,
         candidates=candidates or [],
+        holdings_briefs=holdings_briefs or [],
         max_news_chars=max_news_chars,
         important_max_chars=important_max_chars,
         allow_odd_lots=allow_odd_lots,
