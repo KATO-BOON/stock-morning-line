@@ -2,3 +2,4 @@ requests>=2.32.0
 feedparser>=6.0.11
 yfinance>=0.2.50
 python-dateutil>=2.9.0
+jpholiday>=0.1.10

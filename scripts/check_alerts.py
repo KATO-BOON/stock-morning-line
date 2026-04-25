@@ -27,6 +27,7 @@ import yfinance as yf
 
 sys.path.insert(0, str(Path(__file__).parent))
 from line_client import broadcast
+from trading_day import is_tse_holiday, today_jst
 
 JST = timezone(timedelta(hours=9))
 ROOT = Path(__file__).resolve().parent.parent
@@ -69,8 +70,9 @@ def _get_current_price(code: str) -> float | None:
 
 
 def _is_market_hours() -> bool:
+    """東証の営業時間内か。営業日でない（祝日含む）場合 False。"""
     now = datetime.now(JST)
-    if now.weekday() >= 5:
+    if is_tse_holiday(now.date()):
         return False
     # 9:00 - 15:30
     open_ = now.replace(hour=9, minute=0, second=0, microsecond=0)

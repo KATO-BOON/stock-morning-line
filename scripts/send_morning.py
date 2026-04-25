@@ -12,6 +12,7 @@ from gemini_client import summarize
 from line_client import broadcast
 from news_fetch import fetch_news
 from stock_data import all_snapshots
+from trading_day import is_tse_holiday, reason as day_reason, today_jst
 
 JST = timezone(timedelta(hours=9))
 ROOT = Path(__file__).resolve().parent.parent
@@ -23,19 +24,30 @@ def _load_settings() -> dict:
 
 
 def _should_send_today(settings: dict) -> bool:
-    """平日 or 許可週末リストに含まれるなら配信。"""
-    today = datetime.now(JST).date()
-    if today.weekday() < 5:  # Mon-Fri
+    """営業日(東証) もしくは 例外日付に含まれるなら配信。
+
+    - 土日・祝日・年末年始は基本スキップ
+    - allowed_weekends/allowed_dates に明示された日付は強制配信
+    """
+    today = today_jst()
+    iso = today.isoformat()
+    # 例外日付に含まれていれば強制配信
+    exceptions: set[str] = set(settings.get("allowed_weekends", []))
+    exceptions.update(settings.get("allowed_dates", []))
+    if iso in exceptions:
         return True
-    allowed = set(settings.get("allowed_weekends", []))
-    return today.isoformat() in allowed
+    # 営業日なら配信
+    if not is_tse_holiday(today):
+        return True
+    return False
 
 
 def main() -> int:
     settings = _load_settings()
 
     if not _should_send_today(settings):
-        print(f"[skip] {datetime.now(JST).date()} は非配信日")
+        t = today_jst()
+        print(f"[skip] {t} は非配信日 ({day_reason(t)})")
         return 0
 
     print("[info] ニュース取得中…")
