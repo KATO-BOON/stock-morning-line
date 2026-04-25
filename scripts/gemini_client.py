@@ -171,7 +171,7 @@ def summarize(
                     "contents": [{"parts": [{"text": prompt}]}],
                     "generationConfig": {
                         "temperature": 0.7,
-                        "maxOutputTokens": 3000,
+                        "maxOutputTokens": 8192,
                     },
                 },
                 timeout=90,

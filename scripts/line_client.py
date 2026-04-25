@@ -11,8 +11,23 @@ PUSH_URL = "https://api.line.me/v2/bot/message/push"
 
 
 def _chunks(text: str, size: int = 4900) -> List[str]:
-    """LINEは1メッセージ5000字上限。余裕を持って4900で分割。"""
-    return [text[i : i + size] for i in range(0, len(text), size)] or [""]
+    """LINEは1メッセージ5000字上限。改行境界で分割して途切れを防ぐ。"""
+    if len(text) <= size:
+        return [text] if text else [""]
+    result = []
+    remaining = text
+    while len(remaining) > size:
+        # size手前から最も近い改行を探す
+        cut = remaining.rfind("\n", 0, size)
+        if cut < size // 2:  # 改行が近すぎて無駄 → 空白境界
+            cut = remaining.rfind(" ", 0, size)
+        if cut < 0:
+            cut = size
+        result.append(remaining[:cut].rstrip())
+        remaining = remaining[cut:].lstrip("\n ")
+    if remaining:
+        result.append(remaining)
+    return result[:5]  # 1回のbroadcastで最大5通
 
 
 def broadcast(message: str, token: str | None = None) -> int:
@@ -20,7 +35,9 @@ def broadcast(message: str, token: str | None = None) -> int:
     if not token:
         raise RuntimeError("LINE_CHANNEL_ACCESS_TOKEN が未設定です")
 
-    msgs = [{"type": "text", "text": c} for c in _chunks(message)]
+    chunks = _chunks(message)
+    print(f"[info] LINE分割: {len(chunks)}通 / 各{[len(c) for c in chunks]}字")
+    msgs = [{"type": "text", "text": c} for c in chunks]
     resp = requests.post(
         BROADCAST_URL,
         headers={
