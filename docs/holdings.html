@@ -18,19 +18,13 @@
 
 <div class="card">
   <strong>新規追加（買ったら登録）</strong>
+  <label>証券コード（4桁）</label>
+  <input type="text" id="h-code" placeholder="7203" maxlength="5" inputmode="numeric" />
+  <div id="h-name-display" class="muted" style="margin-top:4px;min-height:18px;"></div>
+
   <div class="grid2">
     <div>
-      <label>証券コード（4桁）</label>
-      <input type="text" id="h-code" placeholder="7201" maxlength="5" inputmode="numeric" />
-    </div>
-    <div>
-      <label>銘柄名</label>
-      <input type="text" id="h-name" placeholder="日産自動車" />
-    </div>
-  </div>
-  <div class="grid2">
-    <div>
-      <label>株数</label>
+      <label>株数（100株単位推奨）</label>
       <input type="number" id="h-shares" placeholder="100" min="1" inputmode="numeric" />
     </div>
     <div>
@@ -61,6 +55,7 @@
 
 <div class="row">
   <button class="primary" id="save">保存</button>
+  <button class="sec" id="reload">repoから再取得</button>
   <button class="sec" id="check">いま価格チェック</button>
 </div>
 
@@ -72,6 +67,12 @@
 <script src="common.js"></script>
 <script>
 const s = SML.state;
+let stocksMap = {};
+
+function lookupName(code) {
+  // ユニバース内で見つかったら優先、なければ手動入力（フォールバック）
+  return stocksMap[code] || null;
+}
 
 function renderHoldings() {
   const wrap = document.getElementById('holdings-list');
@@ -107,14 +108,45 @@ function renderHoldings() {
   });
 }
 
+document.getElementById('h-code').addEventListener('input', (e) => {
+  const code = e.target.value.trim();
+  const display = document.getElementById('h-name-display');
+  if (code.length === 4) {
+    const name = lookupName(code);
+    display.textContent = name ? `🟢 ${name}` : '⚠️ 未登録銘柄。下に手動入力欄が出ます';
+    display.style.color = name ? 'var(--g)' : '#999';
+    // 未登録なら手動入力欄を出す
+    let manual = document.getElementById('h-name-manual-row');
+    if (!name) {
+      if (!manual) {
+        const row = document.createElement('div');
+        row.id = 'h-name-manual-row';
+        row.innerHTML = '<label>銘柄名（手動入力）</label><input type="text" id="h-name-manual" placeholder="例: 〇〇商事" />';
+        display.parentNode.insertBefore(row, document.querySelector('.grid2'));
+      }
+    } else if (manual) {
+      manual.remove();
+    }
+  } else {
+    display.textContent = '';
+    const m = document.getElementById('h-name-manual-row');
+    if (m) m.remove();
+  }
+});
+
 document.getElementById('add-h').onclick = () => {
   const code = document.getElementById('h-code').value.trim();
-  const name = document.getElementById('h-name').value.trim();
+  const auto = lookupName(code);
+  const manual = document.getElementById('h-name-manual');
+  const name = auto || (manual ? manual.value.trim() : '');
   const shares = parseInt(document.getElementById('h-shares').value);
   const avg = parseFloat(document.getElementById('h-avg').value);
   const sl = parseFloat(document.getElementById('h-sl').value);
   const tp = parseFloat(document.getElementById('h-tp').value);
-  if (!code || !name || !shares || !avg) { SML.log('コード・名前・株数・取得単価は必須'); return; }
+  if (!code || !/^\d{4}$/.test(code)) { SML.log('❌ 4桁の銘柄コードを入力'); return; }
+  if (!name) { SML.log('❌ 銘柄名（自動補完または手動）が空'); return; }
+  if (!shares || shares <= 0) { SML.log('❌ 株数を入力'); return; }
+  if (!avg || avg <= 0) { SML.log('❌ 取得単価を入力'); return; }
   s.holdings.push({
     id: `${code}-${Date.now()}`,
     code, name, shares, avg_price: avg,
@@ -123,21 +155,50 @@ document.getElementById('add-h').onclick = () => {
     added_at: new Date().toISOString(),
   });
   SML.save();
-  ['h-code','h-name','h-shares','h-avg','h-sl','h-tp'].forEach(id => document.getElementById(id).value = '');
+  ['h-code','h-shares','h-avg','h-sl','h-tp'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('h-name-display').textContent = '';
+  const m = document.getElementById('h-name-manual-row');
+  if (m) m.remove();
   renderHoldings();
-  SML.log(`✅ ${name} 追加（保存ボタンで確定）`);
+  SML.log(`✅ ${name} (${code}) 追加。保存ボタンで repo に反映`);
 };
+
+async function loadFromRepo() {
+  s.gh_pat = document.getElementById('gh-pat').value.trim();
+  if (!s.gh_pat) return;
+  SML.save();
+  try {
+    const cur = await SML.getRepoSettings();
+    s.holdings = cur.body.holdings || [];
+    SML.save();
+    renderHoldings();
+    SML.log(`📥 repoから ${s.holdings.length}銘柄 取得`);
+  } catch (e) { SML.log(`❌ 取得失敗: ${e.message}`); }
+}
 
 document.getElementById('save').onclick = async () => {
   s.gh_pat = document.getElementById('gh-pat').value.trim();
-  if (!s.gh_pat) { SML.log('PATが未入力'); return; }
+  if (!s.gh_pat) { SML.log('❌ PATが未入力'); return; }
   SML.save();
   try {
+    // 保存前に repo の最新holdingsとマージ（他端末で追加分を消さない）
+    const cur = await SML.getRepoSettings();
+    const remoteHoldings = cur.body.holdings || [];
+    const localIds = new Set(s.holdings.map(h => h.id));
+    // ローカルにないリモートID（=他端末で追加されたもの）を取り込む
+    for (const rh of remoteHoldings) {
+      if (!localIds.has(rh.id)) s.holdings.push(rh);
+    }
+    SML.save();
+    renderHoldings();
+
     await SML.patchRepoSettings({ holdings: s.holdings },
       `Update holdings (count=${s.holdings.length})`);
     SML.log(`✅ 保存成功（${s.holdings.length}銘柄）`);
   } catch (e) { SML.log(`❌ ${e.message}`); }
 };
+
+document.getElementById('reload').onclick = loadFromRepo;
 
 document.getElementById('check').onclick = async () => {
   s.gh_pat = document.getElementById('gh-pat').value.trim();
@@ -147,7 +208,19 @@ document.getElementById('check').onclick = async () => {
 };
 
 if (s.gh_pat) document.getElementById('gh-pat').value = s.gh_pat;
+
+// stocks.json をロード
+fetch('stocks.json').then(r => r.json()).then(d => {
+  stocksMap = d;
+  SML.log(`✅ ${Object.keys(d).length}銘柄の名称マスタ読込`);
+}).catch(e => SML.log(`⚠️ 銘柄マスタ読込失敗: ${e.message}`));
+
 renderHoldings();
+
+// 起動時にrepoから自動取得（PATがあれば）
+if (s.gh_pat) {
+  setTimeout(() => loadFromRepo(), 500);
+}
 </script>
 </body>
 </html>
