@@ -12,6 +12,7 @@ from gemini_client import summarize
 from line_client import broadcast
 from news_fetch import fetch_news
 from stock_data import all_snapshots
+from stock_universe import fetch_candidates
 from trading_day import is_tse_holiday, reason as day_reason, today_jst
 
 JST = timezone(timedelta(hours=9))
@@ -58,15 +59,29 @@ def main() -> int:
     snaps = all_snapshots()
     print(f"[info] スナップショット {len(snaps)} 件")
 
+    budget_man = int(settings.get("budget_man", 10))
+    print(f"[info] 予算{budget_man}万円の候補銘柄取得中…")
+    candidates = fetch_candidates(budget_man)
+
     print("[info] Gemini要約中…")
     message = summarize(
-        budget_man=int(settings.get("budget_man", 10)),
+        budget_man=budget_man,
         snapshots=[s.to_dict() for s in snaps],
         news=[n.to_dict() for n in news_items],
+        candidates=[c.to_dict() for c in candidates],
         max_news_chars=int(settings.get("max_news_chars", 220)),
         important_max_chars=int(settings.get("important_news_max_chars", 400)),
-        allow_odd_lots=False,  # 100株単位固定（ミニ株推奨禁止）
+        allow_odd_lots=False,
     )
+
+    # ハルシネーション後処理: 候補リストにない銘柄コードを警告
+    cand_codes = {c.code for c in candidates}
+    import re as _re
+    found = set(_re.findall(r"(?<!\d)(\d{4})(?!\d)", message))
+    bad = [c for c in found if c not in cand_codes]
+    if bad:
+        print(f"[warn] 候補外コード検出: {bad}")
+        message += f"\n\n⚠️ 注意: 上記{','.join(bad[:5])}は候補外コードです。実在確認してから判断ください。"
 
     print("[info] LINE送信中…")
     status = broadcast(message)

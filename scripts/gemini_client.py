@@ -37,6 +37,7 @@ def _build_prompt(
     budget_man: int,
     snapshots: list[dict],
     news: list[dict],
+    candidates: list[dict],
     max_news_chars: int,
     important_max_chars: int,
     allow_odd_lots: bool,
@@ -58,6 +59,11 @@ def _build_prompt(
         f"- [{n['source']}] {n['title']}\n  要約: {n['summary'][:180]}\n  URL: {n['link']}"
         for n in news[:25]
     )
+
+    cand_txt = "\n".join(
+        f"  {c['code']} {c['name']}: 前日終値 {c['prev_close']:,}円 / 100株購入 {c['lot_total']:,}円"
+        for c in candidates
+    ) or "  （候補なし）"
 
     # ミニ株(単元未満株)は推奨しない方針 - 必ず100株単位
     budget_yen = budget_man * 10000
@@ -83,6 +89,9 @@ def _build_prompt(
 
 【関連ニュース（直近18時間以内）】
 {news_txt}
+
+【**推奨候補銘柄リスト（このリストの中からのみ選ぶこと・絶対に他銘柄を作らない**）】
+{cand_txt}
 
 ━━━━━ 出力仕様 ━━━━━
 
@@ -117,13 +126,14 @@ def _build_prompt(
 
 🎯 本日の注目銘柄（予算{budget_man}万円={budget_yen:,}円・**100株単位**）
 
-【重要な制約】
-- **必ず単元株(100株)単位で購入できる銘柄のみ推奨**
-- **株価 ≤ {max_share_price:,}円** （100株購入で予算{budget_man}万円以内に収まる銘柄のみ）
+【絶対厳守】
+- **上記「推奨候補銘柄リスト」に載っている銘柄からのみ選ぶ**
+- リストにない銘柄コード・銘柄名を**絶対に作らない**（実在しない銘柄を作るのは重大な誤り）
 - ミニ株(単元未満株)は推奨禁止
-- 「絶対買い」は存在しない前提で、根拠と材料を明示する
+- 株価×100株が予算以内であることを必ず確認
+- 「絶対買い」は存在しない前提。根拠・リスクを明示
 
-選定理由の根拠となる今朝のニュース・業績・テーマに基づき、3〜5銘柄。
+ニュース・テーマに合致する候補を3〜5銘柄、リストから選ぶ。
 
 ① 銘柄コード 銘柄名
    前日終値: XXX円
@@ -153,6 +163,7 @@ def summarize(
     budget_man: int,
     snapshots: list[dict],
     news: list[dict],
+    candidates: list[dict] | None = None,
     max_news_chars: int = 220,
     important_max_chars: int = 400,
     allow_odd_lots: bool = True,
@@ -166,6 +177,7 @@ def summarize(
         budget_man=budget_man,
         snapshots=snapshots,
         news=news,
+        candidates=candidates or [],
         max_news_chars=max_news_chars,
         important_max_chars=important_max_chars,
         allow_odd_lots=allow_odd_lots,
