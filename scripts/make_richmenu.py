@@ -55,12 +55,12 @@ def make_image() -> bytes:
     title_font = _find_font(120)
     sub_font = _find_font(60)
 
-    # 左: 設定
-    _draw_cell(d, 0, 0, w3, H, "⚙", "設定", "予算・配信日", title_font, sub_font)
-    # 中: 配信テスト
-    _draw_cell(d, w3, 0, w3, H, "🚀", "今すぐ配信", "最新ブリーフ", title_font, sub_font)
-    # 右: リポジトリ
-    _draw_cell(d, w3 * 2, 0, w3, H, "📊", "履歴", "過去の配信", title_font, sub_font)
+    # 左: 朝ニュース設定
+    _draw_cell(d, 0, 0, w3, H, "📰", "朝ニュース", "予算・配信日", title_font, sub_font)
+    # 中: 保有銘柄
+    _draw_cell(d, w3, 0, w3, H, "📊", "保有銘柄", "損切・利確通知", title_font, sub_font)
+    # 右: 今すぐ配信
+    _draw_cell(d, w3 * 2, 0, w3, H, "🚀", "今すぐ配信", "ブリーフ実行", title_font, sub_font)
 
     buf = io.BytesIO()
     img.save(buf, format="PNG", optimize=True)
@@ -89,15 +89,15 @@ def create_richmenu() -> str:
         "areas": [
             {
                 "bounds": {"x": 0, "y": 0, "width": W // 3, "height": H},
-                "action": {"type": "uri", "label": "設定", "uri": PAGES_URL},
+                "action": {"type": "uri", "label": "朝ニュース", "uri": PAGES_URL + "morning.html"},
             },
             {
                 "bounds": {"x": W // 3, "y": 0, "width": W // 3, "height": H},
-                "action": {"type": "uri", "label": "今すぐ配信", "uri": PAGES_URL + "?auto=run"},
+                "action": {"type": "uri", "label": "保有銘柄", "uri": PAGES_URL + "holdings.html"},
             },
             {
                 "bounds": {"x": 2 * W // 3, "y": 0, "width": W // 3, "height": H},
-                "action": {"type": "uri", "label": "履歴", "uri": "https://github.com/KATO-BOON/stock-morning-line/actions"},
+                "action": {"type": "uri", "label": "今すぐ配信", "uri": PAGES_URL + "morning.html?auto=run"},
             },
         ],
     }

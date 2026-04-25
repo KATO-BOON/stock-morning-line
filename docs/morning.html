@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<title>朝ニュース設定</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<a class="back" href="index.html">← ホームへ</a>
+<h1>📰 朝ニュース設定</h1>
+
+<div class="card">
+  <strong>1. 予算（1回の購入の目安）</strong>
+  <div class="muted">例: 10万円 → 株価1,000円で100株 / 500円で200株</div>
+  <div class="budget" id="budget-buttons"></div>
+</div>
+
+<div class="card">
+  <strong>2. 単元未満株</strong>
+  <div class="toggle">
+    <input type="checkbox" id="odd-lots" />
+    <label for="odd-lots" style="margin:0;">1株から購入する（SBI/楽天など）</label>
+  </div>
+</div>
+
+<div class="card">
+  <strong>3. 今週末も配信する</strong>
+  <div class="toggle">
+    <input type="checkbox" id="weekend" />
+    <label for="weekend" style="margin:0;">2026-04-25〜04-26 の土日も配信</label>
+  </div>
+</div>
+
+<div class="card">
+  <strong>4. GitHub PAT（端末ごとに1回）</strong>
+  <div class="muted">PATは端末のブラウザに保存され外部送信されません</div>
+  <input type="password" id="gh-pat" placeholder="ghp_..." />
+</div>
+
+<div class="row">
+  <button class="primary" id="save">設定を保存</button>
+  <button class="sec" id="test">今すぐ朝のブリーフ配信</button>
+</div>
+
+<div class="card" style="margin-top:14px;">
+  <strong>ログ</strong>
+  <div class="log" id="log">（ここに結果が出ます）</div>
+</div>
+
+<script src="common.js"></script>
+<script>
+const BUDGETS = [5, 10, 20, 30, 50, 100];
+const s = SML.state;
+
+function renderBudget() {
+  const wrap = document.getElementById('budget-buttons');
+  wrap.innerHTML = '';
+  BUDGETS.forEach(b => {
+    const btn = document.createElement('button');
+    btn.textContent = `${b}万`;
+    btn.className = (s.budget_man === b) ? 'active' : '';
+    btn.onclick = () => { s.budget_man = b; SML.save(); renderBudget(); };
+    wrap.appendChild(btn);
+  });
+}
+
+function init() {
+  document.getElementById('odd-lots').checked = s.allow_odd_lots !== false;
+  document.getElementById('weekend').checked = !!(s.allowed_weekends && s.allowed_weekends.length);
+  if (s.gh_pat) document.getElementById('gh-pat').value = s.gh_pat;
+  renderBudget();
+}
+
+document.getElementById('save').onclick = async () => {
+  s.allow_odd_lots = document.getElementById('odd-lots').checked;
+  s.allowed_weekends = document.getElementById('weekend').checked ? ['2026-04-25','2026-04-26'] : [];
+  s.gh_pat = document.getElementById('gh-pat').value.trim();
+  if (!s.budget_man) { SML.log('予算ボタンを選んでください'); return; }
+  if (!s.gh_pat) { SML.log('PATが未入力'); return; }
+  SML.save();
+  try {
+    await SML.patchRepoSettings({
+      budget_man: s.budget_man,
+      allow_odd_lots: s.allow_odd_lots,
+      allowed_weekends: s.allowed_weekends,
+      max_news_chars: 220,
+      important_news_max_chars: 400,
+      include_links: true,
+    }, `Update morning settings (budget=${s.budget_man}万, weekend=${s.allowed_weekends.length>0})`);
+    SML.log(`✅ 保存成功（予算 ${s.budget_man}万）`);
+  } catch (e) { SML.log(`❌ ${e.message}`); }
+};
+
+document.getElementById('test').onclick = async () => {
+  s.gh_pat = document.getElementById('gh-pat').value.trim();
+  SML.save();
+  try { await SML.dispatch('morning.yml'); SML.log('🚀 朝のブリーフ起動。1〜2分後にLINE'); }
+  catch (e) { SML.log(`❌ ${e.message}`); }
+};
+
+init();
+if (new URLSearchParams(location.search).get('auto') === 'run') {
+  if (s.gh_pat) { SML.log('自動配信中...'); document.getElementById('test').click(); }
+  else { SML.log('初回はPATを入力して保存→配信を押してください'); }
+}
+</script>
+</body>
+</html>

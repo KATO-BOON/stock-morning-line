@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<title>保有銘柄</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<a class="back" href="index.html">← ホームへ</a>
+<h1>📊 保有銘柄</h1>
+
+<div class="card">
+  <strong>登録済み銘柄</strong>
+  <div class="muted">市場時間中（9:00-15:30）10分ごとに監視。損切・利確ライン突破でLINE即通知</div>
+  <div id="holdings-list" style="margin-top:10px;"></div>
+</div>
+
+<div class="card">
+  <strong>新規追加（買ったら登録）</strong>
+  <div class="grid2">
+    <div>
+      <label>証券コード（4桁）</label>
+      <input type="text" id="h-code" placeholder="7201" maxlength="5" inputmode="numeric" />
+    </div>
+    <div>
+      <label>銘柄名</label>
+      <input type="text" id="h-name" placeholder="日産自動車" />
+    </div>
+  </div>
+  <div class="grid2">
+    <div>
+      <label>株数</label>
+      <input type="number" id="h-shares" placeholder="100" min="1" inputmode="numeric" />
+    </div>
+    <div>
+      <label>取得単価（円）</label>
+      <input type="number" id="h-avg" placeholder="502" step="0.5" inputmode="decimal" />
+    </div>
+  </div>
+  <div class="grid2">
+    <div>
+      <label>損切ライン（円）</label>
+      <input type="number" id="h-sl" placeholder="480" step="0.5" inputmode="decimal" />
+    </div>
+    <div>
+      <label>利確ライン（円）</label>
+      <input type="number" id="h-tp" placeholder="540" step="0.5" inputmode="decimal" />
+    </div>
+  </div>
+  <div style="margin-top:10px;">
+    <button class="sec" id="add-h">＋ 追加（バッファ）</button>
+    <span class="muted">追加後、下の「保存」で確定</span>
+  </div>
+</div>
+
+<div class="card">
+  <strong>GitHub PAT（端末ごとに1回）</strong>
+  <input type="password" id="gh-pat" placeholder="ghp_..." />
+</div>
+
+<div class="row">
+  <button class="primary" id="save">保存</button>
+  <button class="sec" id="check">いま価格チェック</button>
+</div>
+
+<div class="card" style="margin-top:14px;">
+  <strong>ログ</strong>
+  <div class="log" id="log">（ここに結果が出ます）</div>
+</div>
+
+<script src="common.js"></script>
+<script>
+const s = SML.state;
+
+function renderHoldings() {
+  const wrap = document.getElementById('holdings-list');
+  wrap.innerHTML = '';
+  if (!s.holdings.length) {
+    wrap.innerHTML = '<div class="muted">保有銘柄なし</div>';
+    return;
+  }
+  s.holdings.forEach((h, i) => {
+    const total = h.shares * h.avg_price;
+    const div = document.createElement('div');
+    div.className = 'holding';
+    div.innerHTML = `
+      <h4>${h.code} ${h.name} <span class="badge">${h.shares}株</span></h4>
+      <div class="muted">取得 ${h.avg_price.toLocaleString()}円 × ${h.shares} = ${total.toLocaleString()}円</div>
+      <div class="muted">損切 ${h.stop_loss ? h.stop_loss.toLocaleString()+'円' : '-'} / 利確 ${h.take_profit ? h.take_profit.toLocaleString()+'円' : '-'}</div>
+      <div class="row-end">
+        <button class="danger" data-i="${i}">売却済（削除）</button>
+      </div>
+    `;
+    wrap.appendChild(div);
+  });
+  wrap.querySelectorAll('button.danger').forEach(b => {
+    b.onclick = () => {
+      const i = parseInt(b.dataset.i);
+      if (confirm(`${s.holdings[i].name} を削除（売却処理）しますか？`)) {
+        s.holdings.splice(i, 1);
+        SML.save();
+        renderHoldings();
+        SML.log('削除しました（保存ボタンで反映）');
+      }
+    };
+  });
+}
+
+document.getElementById('add-h').onclick = () => {
+  const code = document.getElementById('h-code').value.trim();
+  const name = document.getElementById('h-name').value.trim();
+  const shares = parseInt(document.getElementById('h-shares').value);
+  const avg = parseFloat(document.getElementById('h-avg').value);
+  const sl = parseFloat(document.getElementById('h-sl').value);
+  const tp = parseFloat(document.getElementById('h-tp').value);
+  if (!code || !name || !shares || !avg) { SML.log('コード・名前・株数・取得単価は必須'); return; }
+  s.holdings.push({
+    id: `${code}-${Date.now()}`,
+    code, name, shares, avg_price: avg,
+    stop_loss: isNaN(sl) ? 0 : sl,
+    take_profit: isNaN(tp) ? 0 : tp,
+    added_at: new Date().toISOString(),
+  });
+  SML.save();
+  ['h-code','h-name','h-shares','h-avg','h-sl','h-tp'].forEach(id => document.getElementById(id).value = '');
+  renderHoldings();
+  SML.log(`✅ ${name} 追加（保存ボタンで確定）`);
+};
+
+document.getElementById('save').onclick = async () => {
+  s.gh_pat = document.getElementById('gh-pat').value.trim();
+  if (!s.gh_pat) { SML.log('PATが未入力'); return; }
+  SML.save();
+  try {
+    await SML.patchRepoSettings({ holdings: s.holdings },
+      `Update holdings (count=${s.holdings.length})`);
+    SML.log(`✅ 保存成功（${s.holdings.length}銘柄）`);
+  } catch (e) { SML.log(`❌ ${e.message}`); }
+};
+
+document.getElementById('check').onclick = async () => {
+  s.gh_pat = document.getElementById('gh-pat').value.trim();
+  SML.save();
+  try { await SML.dispatch('price-alert.yml'); SML.log('🚀 価格チェック起動（突破時のみLINE通知）'); }
+  catch (e) { SML.log(`❌ ${e.message}`); }
+};
+
+if (s.gh_pat) document.getElementById('gh-pat').value = s.gh_pat;
+renderHoldings();
+</script>
+</body>
+</html>
