@@ -17,11 +17,23 @@
 </div>
 
 <div class="card">
-  <strong>2. 今週末も配信する</strong>
-  <div class="toggle">
-    <input type="checkbox" id="weekend" />
-    <label for="weekend" style="margin:0;">2026-04-25〜04-26 の土日も配信</label>
+  <strong>2. 配信スケジュール</strong>
+  <div class="muted" style="margin-top:6px; line-height:1.6;">
+    📅 <strong>営業日のみ毎朝8時に配信</strong><br>
+    ✅ 月〜金の平日<br>
+    ❌ 土曜・日曜<br>
+    ❌ 国民の祝日<br>
+    ❌ 年末年始（12/31〜1/3）<br>
+    <span style="color:#999; font-size:11px;">※判定は jpholiday ライブラリ使用。東証休場日と完全一致。</span>
   </div>
+  <details style="margin-top:10px;">
+    <summary style="cursor:pointer; font-size:13px; color:#446;">特定日だけ強制配信する（例外設定）</summary>
+    <div style="margin-top:8px;">
+      <label>YYYY-MM-DD 形式でカンマ区切り（例: 2026-12-25,2027-01-02）</label>
+      <input type="text" id="force-dates" placeholder="空欄で例外なし" />
+      <div class="muted" style="font-size:11px;">指定した日付は土日祝でも強制配信</div>
+    </div>
+  </details>
 </div>
 
 <div class="card">
@@ -58,13 +70,23 @@ function renderBudget() {
 }
 
 function init() {
-  document.getElementById('weekend').checked = !!(s.allowed_weekends && s.allowed_weekends.length);
+  // 過去日付を除外して allowed_dates のみ表示
+  const today = new Date().toISOString().slice(0, 10);
+  const future = (s.allowed_dates || []).filter(d => d >= today);
+  document.getElementById('force-dates').value = future.join(',');
   if (s.gh_pat) document.getElementById('gh-pat').value = s.gh_pat;
   renderBudget();
 }
 
 document.getElementById('save').onclick = async () => {
-  s.allowed_weekends = document.getElementById('weekend').checked ? ['2026-04-25','2026-04-26'] : [];
+  // 例外日付パース（YYYY-MM-DD形式のみ受理、過去日付は捨てる）
+  const today = new Date().toISOString().slice(0, 10);
+  const raw = document.getElementById('force-dates').value.trim();
+  const dates = raw
+    ? raw.split(/[,、\s]+/).map(d => d.trim()).filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d) && d >= today)
+    : [];
+  s.allowed_dates = dates;
+  s.allowed_weekends = [];  // 旧フィールドはクリア
   s.gh_pat = document.getElementById('gh-pat').value.trim();
   if (!s.budget_man) { SML.log('予算ボタンを選んでください'); return; }
   if (!s.gh_pat) { SML.log('PATが未入力'); return; }
@@ -73,12 +95,14 @@ document.getElementById('save').onclick = async () => {
     await SML.patchRepoSettings({
       budget_man: s.budget_man,
       allow_odd_lots: false,
-      allowed_weekends: s.allowed_weekends,
+      allowed_weekends: [],
+      allowed_dates: s.allowed_dates,
       max_news_chars: 220,
       important_news_max_chars: 400,
       include_links: true,
-    }, `Update morning settings (budget=${s.budget_man}万, weekend=${s.allowed_weekends.length>0})`);
-    SML.log(`✅ 保存成功（予算 ${s.budget_man}万・100株単位推奨）`);
+    }, `Update morning settings (budget=${s.budget_man}万, force_dates=${s.allowed_dates.length})`);
+    const ex = s.allowed_dates.length ? `, 例外日 ${s.allowed_dates.length}件` : '';
+    SML.log(`✅ 保存成功（予算 ${s.budget_man}万・営業日のみ配信${ex}）`);
   } catch (e) { SML.log(`❌ ${e.message}`); }
 };
 
