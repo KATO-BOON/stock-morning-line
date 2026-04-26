@@ -26,22 +26,15 @@ def _load_settings() -> dict:
 
 
 def _should_send_today(settings: dict) -> bool:
-    """営業日(東証) もしくは 例外日付に含まれるなら配信。
+    """配信スケジュール判定。
 
-    - 土日・祝日・年末年始は基本スキップ
-    - allowed_weekends/allowed_dates に明示された日付は強制配信
+    - delivery_enabled=False なら一切配信しない
+    - True(or未設定) なら営業日のみ配信（土日祝・年末年始スキップ）
     """
+    if settings.get("delivery_enabled", True) is False:
+        return False
     today = today_jst()
-    iso = today.isoformat()
-    # 例外日付に含まれていれば強制配信
-    exceptions: set[str] = set(settings.get("allowed_weekends", []))
-    exceptions.update(settings.get("allowed_dates", []))
-    if iso in exceptions:
-        return True
-    # 営業日なら配信
-    if not is_tse_holiday(today):
-        return True
-    return False
+    return not is_tse_holiday(today)
 
 
 def main() -> int:
@@ -49,7 +42,10 @@ def main() -> int:
 
     if not _should_send_today(settings):
         t = today_jst()
-        print(f"[skip] {t} は非配信日 ({day_reason(t)})")
+        if settings.get("delivery_enabled", True) is False:
+            print(f"[skip] 配信停止中（delivery_enabled=False）")
+        else:
+            print(f"[skip] {t} は非配信日 ({day_reason(t)})")
         return 0
 
     print("[info] ニュース取得中…")
