@@ -18,13 +18,28 @@
 
 <div class="card">
   <strong>2. 配信スケジュール</strong>
-  <div class="toggle" style="margin-top:8px;">
-    <input type="checkbox" id="delivery-enabled" />
-    <label for="delivery-enabled" style="margin:0;">営業日（月〜金）の朝8時に配信する</label>
-  </div>
-  <div class="muted" style="margin-top:8px; line-height:1.6;">
-    ✅ ON: 月〜金の平日のみ配信（土日・祝日・年末年始は自動スキップ）<br>
-    ❌ OFF: 配信を完全停止
+  <div style="margin-top:10px; display:flex; flex-direction:column; gap:8px;">
+    <label style="display:flex; align-items:center; gap:8px; padding:10px; border:2px solid #ddd; border-radius:8px; cursor:pointer;" id="m-off-row">
+      <input type="radio" name="delivery-mode" value="off" id="m-off" />
+      <div>
+        <strong>🚫 配信ストップ</strong>
+        <div class="muted" style="margin:0; font-size:12px;">完全停止（旅行中などに）</div>
+      </div>
+    </label>
+    <label style="display:flex; align-items:center; gap:8px; padding:10px; border:2px solid #ddd; border-radius:8px; cursor:pointer;" id="m-wd-row">
+      <input type="radio" name="delivery-mode" value="weekdays" id="m-wd" />
+      <div>
+        <strong>📅 平日OK</strong>
+        <div class="muted" style="margin:0; font-size:12px;">月〜金のみ（土日・祝日・年末年始はスキップ）</div>
+      </div>
+    </label>
+    <label style="display:flex; align-items:center; gap:8px; padding:10px; border:2px solid #ddd; border-radius:8px; cursor:pointer;" id="m-all-row">
+      <input type="radio" name="delivery-mode" value="all" id="m-all" />
+      <div>
+        <strong>📰 毎日OK</strong>
+        <div class="muted" style="margin:0; font-size:12px;">土日・祝日も配信（米株動向の追跡用）</div>
+      </div>
+    </label>
   </div>
 </div>
 
@@ -62,14 +77,33 @@ function renderBudget() {
 }
 
 function init() {
-  // delivery_enabled が未設定なら true をデフォルト
-  document.getElementById('delivery-enabled').checked = s.delivery_enabled !== false;
+  // 互換: 旧 delivery_enabled=false なら off, それ以外は weekdays デフォルト
+  let mode = s.delivery_mode;
+  if (!mode) mode = (s.delivery_enabled === false) ? 'off' : 'weekdays';
+  const r = document.getElementById('m-' + (mode === 'weekdays' ? 'wd' : mode));
+  if (r) r.checked = true;
+  highlightMode();
   if (s.gh_pat) document.getElementById('gh-pat').value = s.gh_pat;
   renderBudget();
 }
 
+function highlightMode() {
+  document.querySelectorAll('input[name="delivery-mode"]').forEach(input => {
+    const row = input.closest('label');
+    if (input.checked) {
+      row.style.borderColor = 'var(--g)';
+      row.style.background = '#f0faf3';
+    } else {
+      row.style.borderColor = '#ddd';
+      row.style.background = '#fff';
+    }
+  });
+}
+document.querySelectorAll('input[name="delivery-mode"]').forEach(i => i.addEventListener('change', highlightMode));
+
 document.getElementById('save').onclick = async () => {
-  s.delivery_enabled = document.getElementById('delivery-enabled').checked;
+  const checked = document.querySelector('input[name="delivery-mode"]:checked');
+  s.delivery_mode = checked ? checked.value : 'weekdays';
   s.gh_pat = document.getElementById('gh-pat').value.trim();
   if (!s.budget_man) { SML.log('予算ボタンを選んでください'); return; }
   if (!s.gh_pat) { SML.log('PATが未入力'); return; }
@@ -78,15 +112,15 @@ document.getElementById('save').onclick = async () => {
     await SML.patchRepoSettings({
       budget_man: s.budget_man,
       allow_odd_lots: false,
-      delivery_enabled: s.delivery_enabled,
+      delivery_mode: s.delivery_mode,
       allowed_weekends: [],
       allowed_dates: [],
       max_news_chars: 220,
       important_news_max_chars: 400,
       include_links: true,
-    }, `Update morning settings (budget=${s.budget_man}万, enabled=${s.delivery_enabled})`);
-    const status = s.delivery_enabled ? '営業日のみ配信' : '配信停止中';
-    SML.log(`✅ 保存成功（予算 ${s.budget_man}万・${status}）`);
+    }, `Update morning settings (budget=${s.budget_man}万, mode=${s.delivery_mode})`);
+    const label = { off: '配信停止', weekdays: '平日OK', all: '毎日OK' }[s.delivery_mode];
+    SML.log(`✅ 保存成功（予算 ${s.budget_man}万・${label}）`);
   } catch (e) { SML.log(`❌ ${e.message}`); }
 };
 

@@ -28,13 +28,21 @@ def _load_settings() -> dict:
 def _should_send_today(settings: dict) -> bool:
     """配信スケジュール判定。
 
-    - delivery_enabled=False なら一切配信しない
-    - True(or未設定) なら営業日のみ配信（土日祝・年末年始スキップ）
+    delivery_mode:
+      - "off": 配信しない
+      - "weekdays": 営業日(月〜金、祝日・年末年始除く)のみ配信
+      - "all": 毎日配信
+    旧 delivery_enabled=False は "off" 互換扱い、未設定は "weekdays" デフォルト。
     """
-    if settings.get("delivery_enabled", True) is False:
+    mode = settings.get("delivery_mode")
+    if mode is None:
+        mode = "off" if settings.get("delivery_enabled") is False else "weekdays"
+    if mode == "off":
         return False
-    today = today_jst()
-    return not is_tse_holiday(today)
+    if mode == "all":
+        return True
+    # weekdays
+    return not is_tse_holiday(today_jst())
 
 
 def main() -> int:
@@ -42,10 +50,11 @@ def main() -> int:
 
     if not _should_send_today(settings):
         t = today_jst()
-        if settings.get("delivery_enabled", True) is False:
-            print(f"[skip] 配信停止中（delivery_enabled=False）")
+        mode = settings.get("delivery_mode") or ("off" if settings.get("delivery_enabled") is False else "weekdays")
+        if mode == "off":
+            print(f"[skip] 配信停止中（delivery_mode=off）")
         else:
-            print(f"[skip] {t} は非配信日 ({day_reason(t)})")
+            print(f"[skip] {t} は非配信日 ({day_reason(t)}) / mode={mode}")
         return 0
 
     print("[info] ニュース取得中…")
