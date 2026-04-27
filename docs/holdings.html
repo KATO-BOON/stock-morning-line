@@ -94,7 +94,13 @@ function applyPrediction() {
   }
   const p = predictions[code];
   if (!p) {
-    hint.innerHTML = `⚠️ <strong>${code}</strong>はAI予測対象外。手動入力してください。`;
+    if (Object.keys(predictions).length === 0) {
+      hint.innerHTML = `ℹ️ AI予測データ未生成。朝の自動配信後に利用可能。今は手動入力してください。`;
+    } else if (stocksMap[code]) {
+      hint.innerHTML = `ℹ️ <strong>${code}</strong>はユニバース対象だが今回の予測に含まれず。手動入力推奨。`;
+    } else {
+      hint.innerHTML = `⚠️ <strong>${code}</strong>はAI予測対象外（ユニバース外）。手動入力してください。`;
+    }
     return;
   }
   const sl = Math.round(avg * (1 + p.sl_pct / 100) * 10) / 10;
