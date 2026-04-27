@@ -32,15 +32,19 @@
       <input type="number" id="h-avg" placeholder="502" step="0.5" inputmode="decimal" />
     </div>
   </div>
+  <div id="ai-hint" class="muted" style="margin-top:6px; min-height:18px;"></div>
   <div class="grid2">
     <div>
-      <label>損切ライン（円）</label>
-      <input type="number" id="h-sl" placeholder="480" step="0.5" inputmode="decimal" />
+      <label>損切ライン（円）<span id="sl-tag" style="font-size:10px; color:var(--g);"></span></label>
+      <input type="number" id="h-sl" placeholder="自動予測" step="0.5" inputmode="decimal" />
     </div>
     <div>
-      <label>利確ライン（円）</label>
-      <input type="number" id="h-tp" placeholder="540" step="0.5" inputmode="decimal" />
+      <label>利確ライン（円）<span id="tp-tag" style="font-size:10px; color:var(--g);"></span></label>
+      <input type="number" id="h-tp" placeholder="自動予測" step="0.5" inputmode="decimal" />
     </div>
+  </div>
+  <div style="margin-top:6px;">
+    <button class="sec" id="ai-fill" type="button" style="font-size:13px; padding:6px 12px;">🤖 AIで損切/利確を再計算</button>
   </div>
   <div style="margin-top:10px;">
     <button class="sec" id="add-h">＋ 追加（バッファ）</button>
@@ -68,10 +72,38 @@
 <script>
 const s = SML.state;
 let stocksMap = {};
+let predictions = {};   // {code: {sl_pct, tp_pct, rationale, source, name, price}}
 
 function lookupName(code) {
-  // ユニバース内で見つかったら優先、なければ手動入力（フォールバック）
   return stocksMap[code] || null;
+}
+
+function applyPrediction() {
+  const code = document.getElementById('h-code').value.trim();
+  const avgEl = document.getElementById('h-avg');
+  const avg = parseFloat(avgEl.value);
+  const slEl = document.getElementById('h-sl');
+  const tpEl = document.getElementById('h-tp');
+  const slTag = document.getElementById('sl-tag');
+  const tpTag = document.getElementById('tp-tag');
+  const hint = document.getElementById('ai-hint');
+  if (!code || !avg || avg <= 0) {
+    hint.textContent = '';
+    slTag.textContent = ''; tpTag.textContent = '';
+    return;
+  }
+  const p = predictions[code];
+  if (!p) {
+    hint.innerHTML = `⚠️ <strong>${code}</strong>はAI予測対象外。手動入力してください。`;
+    return;
+  }
+  const sl = Math.round(avg * (1 + p.sl_pct / 100) * 10) / 10;
+  const tp = Math.round(avg * (1 + p.tp_pct / 100) * 10) / 10;
+  slEl.value = sl;
+  tpEl.value = tp;
+  const tag = p.source === 'ai' ? '🤖AI' : '📊ATR';
+  slTag.textContent = ` ${tag}`; tpTag.textContent = ` ${tag}`;
+  hint.innerHTML = `${tag} 予測: SL ${p.sl_pct}% (${sl}円) / TP +${p.tp_pct}% (${tp}円) — ${p.rationale}`;
 }
 
 function renderHoldings() {
@@ -115,7 +147,6 @@ document.getElementById('h-code').addEventListener('input', (e) => {
     const name = lookupName(code);
     display.textContent = name ? `🟢 ${name}` : '⚠️ 未登録銘柄。下に手動入力欄が出ます';
     display.style.color = name ? 'var(--g)' : '#999';
-    // 未登録なら手動入力欄を出す
     let manual = document.getElementById('h-name-manual-row');
     if (!name) {
       if (!manual) {
@@ -127,12 +158,19 @@ document.getElementById('h-code').addEventListener('input', (e) => {
     } else if (manual) {
       manual.remove();
     }
+    // 取得単価が既に入力されてればAI予測適用
+    applyPrediction();
   } else {
     display.textContent = '';
     const m = document.getElementById('h-name-manual-row');
     if (m) m.remove();
+    document.getElementById('ai-hint').textContent = '';
   }
 });
+
+// 取得単価変更時もAI予測再計算
+document.getElementById('h-avg').addEventListener('input', applyPrediction);
+document.getElementById('ai-fill').addEventListener('click', applyPrediction);
 
 document.getElementById('add-h').onclick = () => {
   const code = document.getElementById('h-code').value.trim();
@@ -214,6 +252,15 @@ fetch('stocks.json').then(r => r.json()).then(d => {
   stocksMap = d;
   SML.log(`✅ ${Object.keys(d).length}銘柄の名称マスタ読込`);
 }).catch(e => SML.log(`⚠️ 銘柄マスタ読込失敗: ${e.message}`));
+
+// AI予測データ(SL/TP)をロード
+fetch('predictions.json?_=' + Date.now()).then(r => r.json()).then(d => {
+  predictions = d.predictions || {};
+  const aiCount = Object.values(predictions).filter(p => p.source === 'ai').length;
+  const total = Object.keys(predictions).length;
+  const ts = d.generated_at ? new Date(d.generated_at).toLocaleString('ja-JP') : '-';
+  SML.log(`🤖 AI予測 ${aiCount}/${total}銘柄 (生成: ${ts})`);
+}).catch(e => SML.log(`⚠️ 予測データ未生成: 朝の自動配信後に利用可`));
 
 renderHoldings();
 
