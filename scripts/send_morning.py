@@ -101,6 +101,15 @@ def main() -> int:
     print("[info] LINE送信中…")
     status = broadcast(message)
     print(f"[ok] LINE送信完了 HTTP {status}")
+
+    # AI予測(損切/利確) も生成しておく（失敗してもbrief配信は成功扱い）
+    try:
+        print("[info] SL/TP予測を生成中…")
+        import predict_levels
+        predict_levels.main()
+    except Exception as e:
+        print(f"[warn] 予測生成失敗（無視）: {e}")
+
     return 0
 
 
