@@ -2,15 +2,16 @@ name: morning-brief
 
 on:
   schedule:
-    # 23:00 UTC = 08:00 JST (翌日)
-    # 毎日走らせ、スクリプト側で平日 or 許可週末かを判定
+    # 23:00 UTC = 08:00 JST
     - cron: "0 23 * * *"
-  workflow_dispatch: {}  # 手動実行可
+  workflow_dispatch: {}
 
 jobs:
   send:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -23,9 +24,21 @@ jobs:
       - name: Install deps
         run: pip install -r requirements.txt
 
-      - name: Run morning brief
+      - name: Run morning brief + predictions
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TZ: Asia/Tokyo
         run: python scripts/send_morning.py
+
+      - name: Commit predictions
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/predictions.json 2>/dev/null || true
+          if ! git diff --staged --quiet; then
+            git commit -m "Update SL/TP predictions [skip ci]"
+            git push
+          else
+            echo "no prediction changes"
+          fi
