@@ -1,7 +1,7 @@
 {
-  "budget_man": 20,
+  "budget_man": 10,
   "allow_odd_lots": false,
-  "delivery_mode": "weekdays",
+  "delivery_mode": "all",
   "allowed_weekends": [],
   "allowed_dates": [],
   "indices": [
