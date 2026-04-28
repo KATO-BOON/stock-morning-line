@@ -2,8 +2,12 @@ name: morning-brief
 
 on:
   schedule:
-    # 23:00 UTC = 08:00 JST
-    - cron: "0 23 * * *"
+    # 高負荷時のcronスキップ対策で複数回スケジュール
+    # スクリプト側で重複送信を防止（state/last_sent.jsonで本日送信済みチェック）
+    - cron: "7 23 * * *"   # 08:07 JST
+    - cron: "23 23 * * *"  # 08:23 JST
+    - cron: "47 23 * * *"  # 08:47 JST
+    - cron: "17 0 * * *"   # 09:17 JST (最終フォールバック)
   workflow_dispatch: {}
 
 jobs:
@@ -31,14 +35,14 @@ jobs:
           TZ: Asia/Tokyo
         run: python scripts/send_morning.py
 
-      - name: Commit predictions
+      - name: Commit predictions and state
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/predictions.json 2>/dev/null || true
+          git add docs/predictions.json state/last_sent.json 2>/dev/null || true
           if ! git diff --staged --quiet; then
-            git commit -m "Update SL/TP predictions [skip ci]"
+            git commit -m "Update predictions/state [skip ci]"
             git push
           else
-            echo "no prediction changes"
+            echo "no changes"
           fi

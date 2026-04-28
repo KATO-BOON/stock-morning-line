@@ -19,10 +19,35 @@ from trading_day import is_tse_holiday, reason as day_reason, today_jst
 JST = timezone(timedelta(hours=9))
 ROOT = Path(__file__).resolve().parent.parent
 SETTINGS_PATH = ROOT / "config" / "settings.json"
+STATE_PATH = ROOT / "state" / "last_sent.json"
 
 
 def _load_settings() -> dict:
     return json.loads(SETTINGS_PATH.read_text(encoding="utf-8"))
+
+
+def _already_sent_today() -> bool:
+    """本日(JST)既に配信済みなら True。冗長cron実行時の重複防止。"""
+    if not STATE_PATH.exists():
+        return False
+    try:
+        state = json.loads(STATE_PATH.read_text(encoding="utf-8"))
+        return state.get("morning_date") == today_jst().isoformat()
+    except Exception:
+        return False
+
+
+def _mark_sent_today() -> None:
+    STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    state = {}
+    if STATE_PATH.exists():
+        try:
+            state = json.loads(STATE_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    state["morning_date"] = today_jst().isoformat()
+    state["morning_at"] = datetime.now(JST).isoformat()
+    STATE_PATH.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def _should_send_today(settings: dict) -> bool:
@@ -55,6 +80,11 @@ def main() -> int:
             print(f"[skip] 配信停止中（delivery_mode=off）")
         else:
             print(f"[skip] {t} は非配信日 ({day_reason(t)}) / mode={mode}")
+        return 0
+
+    # 冗長cron対策: 本日既に配信済みなら重複送信せず
+    if _already_sent_today():
+        print(f"[skip] 本日({today_jst()})は既に配信済み（冗長cron検知）")
         return 0
 
     print("[info] ニュース取得中…")
@@ -101,6 +131,8 @@ def main() -> int:
     print("[info] LINE送信中…")
     status = broadcast(message)
     print(f"[ok] LINE送信完了 HTTP {status}")
+    _mark_sent_today()
+    print(f"[ok] 本日配信済みフラグを保存")
 
     # AI予測(損切/利確) も生成しておく（失敗してもbrief配信は成功扱い）
     try:
