@@ -3,11 +3,12 @@ name: morning-brief
 on:
   schedule:
     # 高負荷時のcronスキップ対策で複数回スケジュール
-    # スクリプト側で重複送信を防止（state/last_sent.jsonで本日送信済みチェック）
-    - cron: "7 23 * * *"   # 08:07 JST
-    - cron: "23 23 * * *"  # 08:23 JST
-    - cron: "47 23 * * *"  # 08:47 JST
-    - cron: "17 0 * * *"   # 09:17 JST (最終フォールバック)
+    # スクリプト側で state/last_sent.json で重複送信を防止
+    # 早く届けるため7:30 JSTから30分間隔で4回トライ（:00ジャストを避ける）
+    - cron: "33 22 * * *"  # 07:33 JST
+    - cron: "53 22 * * *"  # 07:53 JST
+    - cron: "13 23 * * *"  # 08:13 JST
+    - cron: "37 23 * * *"  # 08:37 JST
   workflow_dispatch: {}
 
 jobs:
