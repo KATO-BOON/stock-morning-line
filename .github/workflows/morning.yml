@@ -43,14 +43,24 @@ jobs:
           TZ: Asia/Tokyo
         run: python scripts/send_morning.py
 
-      - name: Commit predictions and state
+      - name: Commit predictions and state (with retry)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/predictions.json state/last_sent.json 2>/dev/null || true
-          if ! git diff --staged --quiet; then
-            git commit -m "Update predictions/state [skip ci]"
-            git push
-          else
+          if git diff --staged --quiet; then
             echo "no changes"
+            exit 0
           fi
+          git commit -m "Update predictions/state [skip ci]"
+          # コンフリクト時は最大3回 rebase+push リトライ
+          for i in 1 2 3; do
+            if git push; then
+              echo "[ok] pushed on attempt $i"
+              exit 0
+            fi
+            echo "[retry $i] push rejected, fetch+rebase"
+            git pull --rebase --autostash origin main
+          done
+          echo "[err] failed after 3 retries"
+          exit 1
