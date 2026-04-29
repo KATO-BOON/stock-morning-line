@@ -1,853 +1,853 @@
 {
-  "generated_at": "2026-04-28T10:37:37.753113+09:00",
+  "generated_at": "2026-04-29T16:37:27.015722+09:00",
   "predictions": {
     "7203": {
-      "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが2.35%と標準的。20日レンジ幅(3468-3057=411円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.5,
+      "tp_pct": 5.9,
+      "rationale": "ATR(2.4%)ベース",
+      "source": "heuristic",
       "name": "トヨタ自動車",
-      "price": 3110.0
+      "price": 3112.0
     },
     "7267": {
-      "sl_pct": -3.0,
-      "tp_pct": 5.0,
-      "rationale": "ATRが1.74%とやや低め。20日レンジ幅(1355-1246=109円)の約2倍を考慮。",
-      "source": "ai",
+      "sl_pct": -2.7,
+      "tp_pct": 4.5,
+      "rationale": "ATR(1.8%)ベース",
+      "source": "heuristic",
       "name": "ホンダ",
-      "price": 1296.0
+      "price": 1293.5
     },
     "7269": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.18%と標準的。20日レンジ幅(1936-1670=266円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.3,
+      "tp_pct": 5.5,
+      "rationale": "ATR(2.2%)ベース",
+      "source": "heuristic",
       "name": "スズキ",
-      "price": 1802.0
+      "price": 1800.0
     },
     "7270": {
-      "sl_pct": -3.0,
-      "tp_pct": 5.5,
-      "rationale": "ATRが1.9%と標準的。20日レンジ幅(2609-2425=184円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -2.9,
+      "tp_pct": 4.8,
+      "rationale": "ATR(1.9%)ベース",
+      "source": "heuristic",
       "name": "SUBARU",
-      "price": 2465.0
+      "price": 2438.5
     },
     "7272": {
-      "sl_pct": -3.0,
-      "tp_pct": 5.0,
-      "rationale": "ATRが1.96%と標準的。20日レンジ幅(1214-1079=135円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -2.9,
+      "tp_pct": 4.9,
+      "rationale": "ATR(2.0%)ベース",
+      "source": "heuristic",
       "name": "ヤマハ発動機",
-      "price": 1094.0
+      "price": 1093.5
     },
     "7211": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが2.84%とやや高め。20日レンジ幅(340-304.2=35.8円)の約3倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.3,
+      "tp_pct": 7.1,
+      "rationale": "ATR(2.8%)ベース",
+      "source": "heuristic",
       "name": "三菱自動車",
-      "price": 318.5
+      "price": 319.0
     },
     "7202": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.53%と標準的。20日レンジ幅(2457-2210=247円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.8,
+      "tp_pct": 6.3,
+      "rationale": "ATR(2.5%)ベース",
+      "source": "heuristic",
       "name": "いすゞ自動車",
-      "price": 2261.5
+      "price": 2271.0
     },
     "7261": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが2.79%とやや高め。20日レンジ幅(1131.5-1008.5=123円)の約2倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.2,
+      "tp_pct": 6.9,
+      "rationale": "ATR(2.8%)ベース",
+      "source": "heuristic",
       "name": "マツダ",
-      "price": 1034.0
+      "price": 1038.5
     },
     "6201": {
-      "sl_pct": -1.0,
-      "tp_pct": 2.0,
-      "rationale": "ATRが0.14%と非常に低い。20日レンジ幅(20530-20400=130円)の約0.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -0.2,
+      "tp_pct": 0.4,
+      "rationale": "ATR(0.1%)ベース",
+      "source": "heuristic",
       "name": "豊田自動織機",
-      "price": 20470.0
+      "price": 20420.0
     },
     "6902": {
-      "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが2.03%と標準的。20日レンジ幅(1988-1864=124円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.7,
+      "tp_pct": 6.2,
+      "rationale": "ATR(2.5%)ベース",
+      "source": "heuristic",
       "name": "デンソー",
-      "price": 1927.0
+      "price": 1846.5
     },
     "7259": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.43%と標準的。20日レンジ幅(2394-2177=217円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.6,
+      "tp_pct": 7.6,
+      "rationale": "ATR(3.0%)ベース",
+      "source": "heuristic",
       "name": "アイシン",
-      "price": 2250.5
+      "price": 2305.0
     },
     "7276": {
       "sl_pct": -2.5,
-      "tp_pct": 4.5,
-      "rationale": "ATRが1.65%とやや低め。20日レンジ幅(2625-2464.5=160.5円)の約1.5倍を考慮。",
-      "source": "ai",
+      "tp_pct": 4.2,
+      "rationale": "ATR(1.7%)ベース",
+      "source": "heuristic",
       "name": "小糸製作所",
-      "price": 2552.0
+      "price": 2546.0
     },
     "6758": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.39%と標準的。20日レンジ幅(3452-3165=287円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.6,
+      "tp_pct": 5.9,
+      "rationale": "ATR(2.4%)ベース",
+      "source": "heuristic",
       "name": "ソニーG",
-      "price": 3214.0
+      "price": 3234.0
     },
     "6501": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.28%とやや高め。20日レンジ幅(5422-4639=783円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.9,
+      "tp_pct": 8.2,
+      "rationale": "ATR(3.3%)ベース",
+      "source": "heuristic",
       "name": "日立",
-      "price": 5045.0
+      "price": 5047.0
     },
     "6503": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが2.94%とやや高め。20日レンジ幅(6160-5156=1004円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.7,
+      "tp_pct": 7.8,
+      "rationale": "ATR(3.1%)ベース",
+      "source": "heuristic",
       "name": "三菱電機",
-      "price": 6056.0
+      "price": 6078.0
     },
     "6752": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.28%とやや高め。20日レンジ幅(3119-2695.5=423.5円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -5.0,
+      "tp_pct": 8.3,
+      "rationale": "ATR(3.3%)ベース",
+      "source": "heuristic",
       "name": "パナソニックHD",
-      "price": 3064.0
+      "price": 3061.0
     },
     "6701": {
-      "sl_pct": -5.0,
-      "tp_pct": 10.0,
-      "rationale": "ATRが4.13%と高め。20日レンジ幅(4707-3792=915円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -6.4,
+      "tp_pct": 10.6,
+      "rationale": "ATR(4.3%)ベース",
+      "source": "heuristic",
       "name": "NEC",
-      "price": 4520.0
+      "price": 4444.0
     },
     "6702": {
-      "sl_pct": -4.0,
+      "sl_pct": -4.8,
       "tp_pct": 8.0,
-      "rationale": "ATRが3.1%とやや高め。20日レンジ幅(3910-3226=684円)の約1.5倍を考慮。",
-      "source": "ai",
+      "rationale": "ATR(3.2%)ベース",
+      "source": "heuristic",
       "name": "富士通",
-      "price": 3734.0
+      "price": 3693.0
     },
     "6723": {
-      "sl_pct": -6.0,
-      "tp_pct": 12.0,
-      "rationale": "ATRが5.96%と非常に高め。20日レンジ幅(3365-2237.5=1127.5円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -9.2,
+      "tp_pct": 15.4,
+      "rationale": "ATR(6.2%)ベース",
+      "source": "heuristic",
       "name": "ルネサス",
-      "price": 2991.0
+      "price": 2913.0
     },
     "6724": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.22%と標準的。20日レンジ幅(2184.5-1948=236.5円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.4,
+      "tp_pct": 5.6,
+      "rationale": "ATR(2.2%)ベース",
+      "source": "heuristic",
       "name": "セイコーエプソン",
-      "price": 2102.5
+      "price": 2112.0
     },
     "6770": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.59%と標準的。20日レンジ幅(2337.5-2119=218.5円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.9,
+      "tp_pct": 6.6,
+      "rationale": "ATR(2.6%)ベース",
+      "source": "heuristic",
       "name": "アルプスアルパイン",
-      "price": 2332.5
+      "price": 2328.0
     },
     "6857": {
-      "sl_pct": -5.0,
-      "tp_pct": 10.0,
-      "rationale": "ATRが4.75%と高め。20日レンジ幅(32400-21005=11395円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -7.2,
+      "tp_pct": 11.9,
+      "rationale": "ATR(4.8%)ベース",
+      "source": "heuristic",
       "name": "アドバンテスト",
-      "price": 29875.0
+      "price": 29750.0
     },
     "6861": {
-      "sl_pct": -5.0,
-      "tp_pct": 10.0,
-      "rationale": "ATRが2.96%とやや高め。20日レンジ幅(76100-55930=20170円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.5,
+      "tp_pct": 7.5,
+      "rationale": "ATR(3.0%)ベース",
+      "source": "heuristic",
       "name": "キーエンス",
-      "price": 74490.0
+      "price": 73800.0
     },
     "6920": {
-      "sl_pct": -5.0,
-      "tp_pct": 10.0,
-      "rationale": "ATRが4.87%と高め。20日レンジ幅(46450-33760=12690円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -7.4,
+      "tp_pct": 12.4,
+      "rationale": "ATR(4.9%)ベース",
+      "source": "heuristic",
       "name": "レーザーテック",
-      "price": 44590.0
+      "price": 44330.0
     },
     "6954": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.81%と高め。20日レンジ幅(7270-5439=1831円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -5.9,
+      "tp_pct": 9.9,
+      "rationale": "ATR(4.0%)ベース",
+      "source": "heuristic",
       "name": "ファナック",
-      "price": 7073.0
+      "price": 6961.0
     },
     "6971": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.63%と標準的。20日レンジ幅(2790-2415=375円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.0,
+      "tp_pct": 6.6,
+      "rationale": "ATR(2.6%)ベース",
+      "source": "heuristic",
       "name": "京セラ",
-      "price": 2702.0
+      "price": 2689.0
     },
     "6976": {
-      "sl_pct": -5.0,
-      "tp_pct": 10.0,
-      "rationale": "ATRが4.51%と高め。20日レンジ幅(6638-3841=2797円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -6.8,
+      "tp_pct": 11.2,
+      "rationale": "ATR(4.5%)ベース",
+      "source": "heuristic",
       "name": "太陽誘電",
-      "price": 6572.0
+      "price": 6586.0
     },
     "6981": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.84%と高め。20日レンジ幅(5016-3461=1555円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -6.0,
+      "tp_pct": 10.1,
+      "rationale": "ATR(4.0%)ベース",
+      "source": "heuristic",
       "name": "村田製作所",
-      "price": 4926.0
+      "price": 4840.0
     },
     "8035": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.29%とやや高め。20日レンジ幅(47710-37960=9750円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -5.2,
+      "tp_pct": 8.6,
+      "rationale": "ATR(3.5%)ベース",
+      "source": "heuristic",
       "name": "東京エレクトロン",
-      "price": 45860.0
+      "price": 45150.0
     },
     "4063": {
-      "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが2.48%と標準的。20日レンジ幅(7082-6313=769円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.7,
+      "tp_pct": 6.2,
+      "rationale": "ATR(2.5%)ベース",
+      "source": "heuristic",
       "name": "信越化学",
-      "price": 7040.0
+      "price": 7081.0
     },
     "9432": {
-      "sl_pct": -1.5,
-      "tp_pct": 3.0,
-      "rationale": "ATRが0.9%と非常に低い。20日レンジ幅(158.5-151=7.5円)の約2倍を考慮。",
-      "source": "ai",
+      "sl_pct": -1.4,
+      "tp_pct": 2.3,
+      "rationale": "ATR(0.9%)ベース",
+      "source": "heuristic",
       "name": "NTT",
-      "price": 151.5
+      "price": 151.1
     },
     "9433": {
       "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが1.99%と標準的。20日レンジ幅(2780-2518=262円)の約1.5倍を考慮。",
-      "source": "ai",
+      "tp_pct": 5.0,
+      "rationale": "ATR(2.0%)ベース",
+      "source": "heuristic",
       "name": "KDDI",
-      "price": 2574.0
+      "price": 2579.5
     },
     "9434": {
-      "sl_pct": -2.0,
+      "sl_pct": -2.4,
       "tp_pct": 4.0,
-      "rationale": "ATRが1.58%とやや低め。20日レンジ幅(225.7-210.3=15.4円)の約2倍を考慮。",
-      "source": "ai",
+      "rationale": "ATR(1.6%)ベース",
+      "source": "heuristic",
       "name": "ソフトバンク",
-      "price": 218.8
+      "price": 219.3
     },
     "9984": {
-      "sl_pct": -6.0,
-      "tp_pct": 12.0,
-      "rationale": "ATRが6.04%と非常に高め。20日レンジ幅(6160-3540=2620円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -9.7,
+      "tp_pct": 16.2,
+      "rationale": "ATR(6.5%)ベース",
+      "source": "heuristic",
       "name": "ソフトバンクG",
-      "price": 5443.0
+      "price": 5268.0
     },
     "4385": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.72%と高め。20日レンジ幅(4185-3546=639円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -5.7,
+      "tp_pct": 9.4,
+      "rationale": "ATR(3.8%)ベース",
+      "source": "heuristic",
       "name": "メルカリ",
-      "price": 3827.0
+      "price": 3873.0
     },
     "4307": {
-      "sl_pct": -5.0,
-      "tp_pct": 10.0,
-      "rationale": "ATRが4.73%と高め。20日レンジ幅(5224-4357=867円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -7.8,
+      "tp_pct": 13.0,
+      "rationale": "ATR(5.2%)ベース",
+      "source": "heuristic",
       "name": "野村総研",
-      "price": 4548.0
+      "price": 4313.0
     },
     "6098": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.27%とやや高め。20日レンジ幅(8011-6865=1146円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.9,
+      "tp_pct": 8.1,
+      "rationale": "ATR(3.2%)ベース",
+      "source": "heuristic",
       "name": "リクルートHD",
-      "price": 7347.0
+      "price": 7464.0
     },
     "8306": {
-      "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが2.18%と標準的。20日レンジ幅(2966.5-2691=275.5円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.4,
+      "tp_pct": 5.6,
+      "rationale": "ATR(2.2%)ベース",
+      "source": "heuristic",
       "name": "三菱UFJ",
-      "price": 2845.5
+      "price": 2875.0
     },
     "8316": {
-      "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが2.15%と標準的。20日レンジ幅(5738-5235=503円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.3,
+      "tp_pct": 5.6,
+      "rationale": "ATR(2.2%)ベース",
+      "source": "heuristic",
       "name": "三井住友FG",
-      "price": 5534.0
+      "price": 5648.0
     },
     "8411": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.53%と標準的。20日レンジ幅(7059-6345=714円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.0,
+      "tp_pct": 6.7,
+      "rationale": "ATR(2.7%)ベース",
+      "source": "heuristic",
       "name": "みずほFG",
-      "price": 6720.0
+      "price": 6936.0
     },
     "8591": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.48%と標準的。20日レンジ幅(5462-4673=789円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.7,
+      "tp_pct": 6.2,
+      "rationale": "ATR(2.5%)ベース",
+      "source": "heuristic",
       "name": "オリックス",
-      "price": 5359.0
+      "price": 5350.0
     },
     "8601": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.46%と標準的。20日レンジ幅(1599-1412.5=186.5円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.6,
+      "tp_pct": 6.1,
+      "rationale": "ATR(2.4%)ベース",
+      "source": "heuristic",
       "name": "大和証券G",
-      "price": 1448.5
+      "price": 1466.5
     },
     "8604": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.0%とやや高め。20日レンジ幅(1436.5-1227=209.5円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.5,
+      "tp_pct": 7.5,
+      "rationale": "ATR(3.0%)ベース",
+      "source": "heuristic",
       "name": "野村HD",
-      "price": 1264.0
+      "price": 1274.0
     },
     "8630": {
-      "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが2.04%と標準的。20日レンジ幅(6296-5620=676円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.1,
+      "tp_pct": 5.2,
+      "rationale": "ATR(2.1%)ベース",
+      "source": "heuristic",
       "name": "SOMPOHD",
-      "price": 5787.0
+      "price": 5771.0
     },
     "8725": {
-      "sl_pct": -2.5,
-      "tp_pct": 5.0,
-      "rationale": "ATRが1.69%とやや低め。20日レンジ幅(4245-3886=359円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -2.6,
+      "tp_pct": 4.3,
+      "rationale": "ATR(1.7%)ベース",
+      "source": "heuristic",
       "name": "MS&AD",
-      "price": 4006.0
+      "price": 4019.0
     },
     "8766": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.43%と標準的。20日レンジ幅(7580-6822=758円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.7,
+      "tp_pct": 6.2,
+      "rationale": "ATR(2.5%)ベース",
+      "source": "heuristic",
       "name": "東京海上HD",
-      "price": 7278.0
+      "price": 7238.0
     },
     "6178": {
-      "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが2.14%と標準的。20日レンジ幅(1925-1740=185円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.4,
+      "tp_pct": 5.6,
+      "rationale": "ATR(2.2%)ベース",
+      "source": "heuristic",
       "name": "日本郵政",
-      "price": 1790.5
+      "price": 1823.0
     },
     "8001": {
       "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが2.02%と標準的。20日レンジ幅(2142-1903=239円)の約1.5倍を考慮。",
-      "source": "ai",
+      "tp_pct": 5.1,
+      "rationale": "ATR(2.0%)ベース",
+      "source": "heuristic",
       "name": "伊藤忠",
-      "price": 1965.0
+      "price": 1958.5
     },
     "8002": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.6%と標準的。20日レンジ幅(6230-5789=441円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.9,
+      "tp_pct": 6.6,
+      "rationale": "ATR(2.6%)ベース",
+      "source": "heuristic",
       "name": "丸紅",
-      "price": 6078.0
+      "price": 6084.0
     },
     "8015": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.06%とやや高め。20日レンジ幅(6769-5974=795円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.6,
+      "tp_pct": 7.7,
+      "rationale": "ATR(3.1%)ベース",
+      "source": "heuristic",
       "name": "豊田通商",
-      "price": 6403.0
+      "price": 6379.0
     },
     "8031": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが2.93%とやや高め。20日レンジ幅(6675-5577=1098円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.4,
+      "tp_pct": 7.3,
+      "rationale": "ATR(2.9%)ベース",
+      "source": "heuristic",
       "name": "三井物産",
-      "price": 5841.0
+      "price": 5820.0
     },
     "8053": {
-      "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが2.2%と標準的。20日レンジ幅(6352-5665=687円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.5,
+      "tp_pct": 5.8,
+      "rationale": "ATR(2.3%)ベース",
+      "source": "heuristic",
       "name": "住友商事",
-      "price": 5796.0
+      "price": 5801.0
     },
     "8058": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.02%とやや高め。20日レンジ幅(5651-4693=958円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.5,
+      "tp_pct": 7.5,
+      "rationale": "ATR(3.0%)ベース",
+      "source": "heuristic",
       "name": "三菱商事",
-      "price": 4902.0
+      "price": 4913.0
     },
     "8801": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.48%と標準的。20日レンジ幅(1825.5-1650=175.5円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.7,
+      "tp_pct": 6.2,
+      "rationale": "ATR(2.5%)ベース",
+      "source": "heuristic",
       "name": "三井不動産",
-      "price": 1722.5
+      "price": 1711.0
     },
     "8802": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.73%と標準的。20日レンジ幅(4804-4397=407円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.1,
+      "tp_pct": 6.8,
+      "rationale": "ATR(2.7%)ベース",
+      "source": "heuristic",
       "name": "三菱地所",
-      "price": 4488.0
+      "price": 4496.0
     },
     "1925": {
       "sl_pct": -2.0,
-      "tp_pct": 4.0,
-      "rationale": "ATRが1.32%と低め。20日レンジ幅(5098-4740=358円)の約1.5倍を考慮。",
-      "source": "ai",
+      "tp_pct": 3.4,
+      "rationale": "ATR(1.4%)ベース",
+      "source": "heuristic",
       "name": "大和ハウス",
-      "price": 4844.0
+      "price": 4876.0
     },
     "1928": {
-      "sl_pct": -2.0,
+      "sl_pct": -2.4,
       "tp_pct": 4.0,
-      "rationale": "ATRが1.59%とやや低め。20日レンジ幅(3696-3366=330円)の約1.5倍を考慮。",
-      "source": "ai",
+      "rationale": "ATR(1.6%)ベース",
+      "source": "heuristic",
       "name": "積水ハウス",
-      "price": 3427.0
+      "price": 3455.0
     },
     "4502": {
       "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが2.0%と標準的。20日レンジ幅(6033-5187=846円)の約1.5倍を考慮。",
-      "source": "ai",
+      "tp_pct": 5.0,
+      "rationale": "ATR(2.0%)ベース",
+      "source": "heuristic",
       "name": "武田薬品",
-      "price": 5270.0
+      "price": 5289.0
     },
     "4503": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.65%と標準的。20日レンジ幅(2717-2263.5=453.5円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.0,
+      "tp_pct": 6.7,
+      "rationale": "ATR(2.7%)ベース",
+      "source": "heuristic",
       "name": "アステラス",
-      "price": 2341.0
+      "price": 2306.0
     },
     "4519": {
-      "sl_pct": -5.0,
-      "tp_pct": 10.0,
-      "rationale": "ATRが4.76%と高め。20日レンジ幅(9344-7402=1942円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -7.1,
+      "tp_pct": 11.8,
+      "rationale": "ATR(4.7%)ベース",
+      "source": "heuristic",
       "name": "中外製薬",
-      "price": 7810.0
+      "price": 7940.0
     },
     "4523": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.4%と標準的。20日レンジ幅(5233-4554=679円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.6,
+      "tp_pct": 6.0,
+      "rationale": "ATR(2.4%)ベース",
+      "source": "heuristic",
       "name": "エーザイ",
-      "price": 4570.0
+      "price": 4605.0
     },
     "4543": {
-      "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが2.24%と標準的。20日レンジ幅(2266-2001.5=264.5円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.4,
+      "tp_pct": 5.6,
+      "rationale": "ATR(2.2%)ベース",
+      "source": "heuristic",
       "name": "テルモ",
-      "price": 2047.5
+      "price": 2055.5
     },
     "4568": {
-      "sl_pct": -4.5,
-      "tp_pct": 9.0,
-      "rationale": "ATRが4.07%と高め。20日レンジ幅(3016-2463=553円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -6.2,
+      "tp_pct": 10.3,
+      "rationale": "ATR(4.1%)ベース",
+      "source": "heuristic",
       "name": "第一三共",
-      "price": 2613.5
+      "price": 2650.5
     },
     "2502": {
-      "sl_pct": -2.5,
-      "tp_pct": 5.0,
-      "rationale": "ATRが1.79%とやや低め。20日レンジ幅(1675.5-1531=144.5円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -2.7,
+      "tp_pct": 4.6,
+      "rationale": "ATR(1.8%)ベース",
+      "source": "heuristic",
       "name": "アサヒG",
-      "price": 1548.5
+      "price": 1560.0
     },
     "2503": {
-      "sl_pct": -2.5,
-      "tp_pct": 5.0,
-      "rationale": "ATRが1.78%とやや低め。20日レンジ幅(2682.5-2446.5=236円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -2.7,
+      "tp_pct": 4.5,
+      "rationale": "ATR(1.8%)ベース",
+      "source": "heuristic",
       "name": "キリンHD",
-      "price": 2478.0
+      "price": 2495.0
     },
     "2914": {
-      "sl_pct": -2.0,
-      "tp_pct": 4.0,
-      "rationale": "ATRが1.49%と低め。20日レンジ幅(6175-5646=529円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -2.2,
+      "tp_pct": 3.7,
+      "rationale": "ATR(1.5%)ベース",
+      "source": "heuristic",
       "name": "JT",
-      "price": 5753.0
+      "price": 5779.0
     },
     "8267": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.33%とやや高め。20日レンジ幅(1975.5-1512=463.5円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -5.0,
+      "tp_pct": 8.3,
+      "rationale": "ATR(3.3%)ベース",
+      "source": "heuristic",
       "name": "イオン",
-      "price": 1561.5
+      "price": 1568.5
     },
     "3382": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.28%とやや高め。20日レンジ幅(2262-1848=414円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -5.0,
+      "tp_pct": 8.3,
+      "rationale": "ATR(3.3%)ベース",
+      "source": "heuristic",
       "name": "セブン&アイ",
-      "price": 1909.0
+      "price": 1920.0
     },
     "9983": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.08%とやや高め。20日レンジ幅(75700-62340=13360円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.6,
+      "tp_pct": 7.7,
+      "rationale": "ATR(3.1%)ベース",
+      "source": "heuristic",
       "name": "ファーストリテ",
-      "price": 72990.0
+      "price": 73170.0
     },
     "8113": {
-      "sl_pct": -2.5,
-      "tp_pct": 5.0,
-      "rationale": "ATRが1.88%と標準的。20日レンジ幅(986.9-929.3=57.6円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -2.8,
+      "tp_pct": 4.8,
+      "rationale": "ATR(1.9%)ベース",
+      "source": "heuristic",
       "name": "ユニチャーム",
-      "price": 949.8
+      "price": 941.2
     },
     "4452": {
-      "sl_pct": -2.0,
-      "tp_pct": 4.0,
-      "rationale": "ATRが1.43%と低め。20日レンジ幅(6319-5882=437円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -2.2,
+      "tp_pct": 3.6,
+      "rationale": "ATR(1.4%)ベース",
+      "source": "heuristic",
       "name": "花王",
-      "price": 5994.0
+      "price": 5997.0
     },
     "4901": {
-      "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが2.05%と標準的。20日レンジ幅(3230-2875=355円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.1,
+      "tp_pct": 5.2,
+      "rationale": "ATR(2.1%)ベース",
+      "source": "heuristic",
       "name": "富士フイルム",
-      "price": 2944.0
+      "price": 2932.5
     },
     "4911": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.94%とやや高め。20日レンジ幅(3535-3051=484円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.4,
+      "tp_pct": 7.3,
+      "rationale": "ATR(2.9%)ベース",
+      "source": "heuristic",
       "name": "資生堂",
-      "price": 3225.0
+      "price": 3246.0
     },
     "6273": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.13%とやや高め。20日レンジ幅(78530-61030=17500円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.7,
+      "tp_pct": 7.8,
+      "rationale": "ATR(3.1%)ベース",
+      "source": "heuristic",
       "name": "SMC",
-      "price": 77210.0
+      "price": 77000.0
     },
     "6301": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.05%とやや高め。20日レンジ幅(7353-6332=1021円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -5.3,
+      "tp_pct": 8.8,
+      "rationale": "ATR(3.5%)ベース",
+      "source": "heuristic",
       "name": "コマツ",
-      "price": 7223.0
+      "price": 6856.0
     },
     "6326": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.85%と標準的。20日レンジ幅(2788-2476.5=311.5円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.3,
+      "tp_pct": 7.2,
+      "rationale": "ATR(2.9%)ベース",
+      "source": "heuristic",
       "name": "クボタ",
-      "price": 2573.5
+      "price": 2597.5
     },
     "6367": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.25%とやや高め。20日レンジ幅(23065-19240=3825円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.9,
+      "tp_pct": 8.1,
+      "rationale": "ATR(3.3%)ベース",
+      "source": "heuristic",
       "name": "ダイキン",
-      "price": 21895.0
+      "price": 21865.0
     },
     "7011": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.29%とやや高め。20日レンジ幅(4924-4362=562円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -5.0,
+      "tp_pct": 8.4,
+      "rationale": "ATR(3.4%)ベース",
+      "source": "heuristic",
       "name": "三菱重工",
-      "price": 4769.0
+      "price": 4797.0
     },
     "7012": {
-      "sl_pct": -4.5,
-      "tp_pct": 9.0,
-      "rationale": "ATRが4.42%と高め。20日レンジ幅(3479-2976=503円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -6.7,
+      "tp_pct": 11.1,
+      "rationale": "ATR(4.4%)ベース",
+      "source": "heuristic",
       "name": "川崎重工",
-      "price": 3205.0
+      "price": 3243.0
     },
     "5108": {
-      "sl_pct": -2.0,
-      "tp_pct": 4.0,
-      "rationale": "ATRが1.4%と低め。20日レンジ幅(3484-3278=206円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -2.1,
+      "tp_pct": 3.5,
+      "rationale": "ATR(1.4%)ベース",
+      "source": "heuristic",
       "name": "ブリヂストン",
-      "price": 3319.0
+      "price": 3322.0
     },
     "4188": {
-      "sl_pct": -3.5,
+      "sl_pct": -4.2,
       "tp_pct": 7.0,
-      "rationale": "ATRが2.78%と標準的。20日レンジ幅(1015.5-899.4=116.1円)の約1.5倍を考慮。",
-      "source": "ai",
+      "rationale": "ATR(2.8%)ベース",
+      "source": "heuristic",
       "name": "三菱ケミG",
-      "price": 921.0
+      "price": 918.3
     },
     "3402": {
-      "sl_pct": -2.5,
-      "tp_pct": 5.0,
-      "rationale": "ATRが1.94%と標準的。20日レンジ幅(1191.5-1094=97.5円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -2.9,
+      "tp_pct": 4.9,
+      "rationale": "ATR(1.9%)ベース",
+      "source": "heuristic",
       "name": "東レ",
-      "price": 1135.0
+      "price": 1140.5
     },
     "3407": {
-      "sl_pct": -3.5,
+      "sl_pct": -4.2,
       "tp_pct": 7.0,
-      "rationale": "ATRが2.79%と標準的。20日レンジ幅(1667.5-1488=179.5円)の約1.5倍を考慮。",
-      "source": "ai",
+      "rationale": "ATR(2.8%)ベース",
+      "source": "heuristic",
       "name": "旭化成",
-      "price": 1542.5
+      "price": 1542.0
     },
     "5201": {
-      "sl_pct": -2.5,
-      "tp_pct": 5.0,
-      "rationale": "ATRが1.96%と標準的。20日レンジ幅(5976-5541=435円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -2.9,
+      "tp_pct": 4.9,
+      "rationale": "ATR(1.9%)ベース",
+      "source": "heuristic",
       "name": "AGC",
-      "price": 5729.0
+      "price": 5754.0
     },
     "5401": {
-      "sl_pct": -2.0,
-      "tp_pct": 4.0,
-      "rationale": "ATRが1.43%と低め。20日レンジ幅(606.3-568.6=37.7円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -2.2,
+      "tp_pct": 3.6,
+      "rationale": "ATR(1.4%)ベース",
+      "source": "heuristic",
       "name": "日本製鉄",
       "price": 577.8
     },
     "5411": {
       "sl_pct": -2.5,
-      "tp_pct": 5.0,
-      "rationale": "ATRが1.66%とやや低め。20日レンジ幅(1894-1667=227円)の約1.5倍を考慮。",
-      "source": "ai",
+      "tp_pct": 4.2,
+      "rationale": "ATR(1.7%)ベース",
+      "source": "heuristic",
       "name": "JFE",
-      "price": 1692.0
+      "price": 1700.5
     },
     "5713": {
-      "sl_pct": -5.0,
-      "tp_pct": 10.0,
-      "rationale": "ATRが4.78%と高め。20日レンジ幅(11150-9162=1988円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -7.4,
+      "tp_pct": 12.4,
+      "rationale": "ATR(5.0%)ベース",
+      "source": "heuristic",
       "name": "住友金属鉱山",
-      "price": 9946.0
+      "price": 9664.0
     },
     "5802": {
-      "sl_pct": -5.5,
-      "tp_pct": 11.0,
-      "rationale": "ATRが5.4%と高め。20日レンジ幅(10845-8750=2095円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -8.1,
+      "tp_pct": 13.5,
+      "rationale": "ATR(5.4%)ベース",
+      "source": "heuristic",
       "name": "住友電工",
-      "price": 10095.0
+      "price": 10190.0
     },
     "7974": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.48%と標準的。20日レンジ幅(9086-7866=1220円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.7,
+      "tp_pct": 6.2,
+      "rationale": "ATR(2.5%)ベース",
+      "source": "heuristic",
       "name": "任天堂",
-      "price": 7906.0
+      "price": 7922.0
     },
     "7832": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.43%と標準的。20日レンジ幅(4138-3668=470円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.7,
+      "tp_pct": 6.1,
+      "rationale": "ATR(2.5%)ベース",
+      "source": "heuristic",
       "name": "バンダイナムコ",
-      "price": 3752.0
+      "price": 3721.0
     },
     "4661": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.44%と標準的。20日レンジ幅(2768.5-2378=390.5円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.6,
+      "tp_pct": 6.1,
+      "rationale": "ATR(2.4%)ベース",
+      "source": "heuristic",
       "name": "オリエンタルランド",
-      "price": 2418.0
+      "price": 2434.5
     },
     "4324": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.46%とやや高め。20日レンジ幅(3236-2705=531円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -5.2,
+      "tp_pct": 8.6,
+      "rationale": "ATR(3.5%)ベース",
+      "source": "heuristic",
       "name": "電通G",
-      "price": 2968.0
+      "price": 2978.5
     },
     "9020": {
-      "sl_pct": -2.5,
-      "tp_pct": 5.0,
-      "rationale": "ATRが1.89%と標準的。20日レンジ幅(3728-3391=337円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -2.8,
+      "tp_pct": 4.7,
+      "rationale": "ATR(1.9%)ベース",
+      "source": "heuristic",
       "name": "JR東日本",
-      "price": 3455.0
+      "price": 3451.0
     },
     "9021": {
-      "sl_pct": -2.0,
-      "tp_pct": 4.0,
-      "rationale": "ATRが1.49%と低め。20日レンジ幅(3227-2945=282円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -2.3,
+      "tp_pct": 3.9,
+      "rationale": "ATR(1.6%)ベース",
+      "source": "heuristic",
       "name": "JR西日本",
-      "price": 2958.0
+      "price": 2963.5
     },
     "9022": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.48%と標準的。20日レンジ幅(4430-4010=420円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.8,
+      "tp_pct": 6.3,
+      "rationale": "ATR(2.5%)ベース",
+      "source": "heuristic",
       "name": "JR東海",
-      "price": 4144.0
+      "price": 4069.0
     },
     "9101": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.58%と標準的。20日レンジ幅(6394-5580=814円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.9,
+      "tp_pct": 6.5,
+      "rationale": "ATR(2.6%)ベース",
+      "source": "heuristic",
       "name": "日本郵船",
-      "price": 5648.0
+      "price": 5662.0
     },
     "9104": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが3.2%とやや高め。20日レンジ幅(6952-5761=1191円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -5.0,
+      "tp_pct": 8.3,
+      "rationale": "ATR(3.3%)ベース",
+      "source": "heuristic",
       "name": "商船三井",
-      "price": 5849.0
+      "price": 5965.0
     },
     "9202": {
-      "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが1.94%と標準的。20日レンジ幅(3008-2611=397円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -2.9,
+      "tp_pct": 4.9,
+      "rationale": "ATR(2.0%)ベース",
+      "source": "heuristic",
       "name": "ANA",
-      "price": 2623.5
+      "price": 2629.0
     },
     "9501": {
-      "sl_pct": -4.5,
-      "tp_pct": 9.0,
-      "rationale": "ATRが4.04%と高め。20日レンジ幅(701.2-577=124.2円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -6.2,
+      "tp_pct": 10.3,
+      "rationale": "ATR(4.1%)ベース",
+      "source": "heuristic",
       "name": "東京電力HD",
-      "price": 594.1
+      "price": 611.1
     },
     "9502": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.68%と標準的。20日レンジ幅(2952.5-2555.5=397円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.0,
+      "tp_pct": 6.7,
+      "rationale": "ATR(2.7%)ベース",
+      "source": "heuristic",
       "name": "中部電力",
-      "price": 2598.5
+      "price": 2609.5
     },
     "9503": {
-      "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが2.08%と標準的。20日レンジ幅(2754-2414=340円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.2,
+      "tp_pct": 5.2,
+      "rationale": "ATR(2.1%)ベース",
+      "source": "heuristic",
       "name": "関西電力",
-      "price": 2538.0
+      "price": 2533.5
     },
     "9531": {
-      "sl_pct": -4.0,
-      "tp_pct": 8.0,
-      "rationale": "ATRが2.68%と標準的。20日レンジ幅(7645-6360=1285円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -4.4,
+      "tp_pct": 7.3,
+      "rationale": "ATR(2.9%)ベース",
+      "source": "heuristic",
       "name": "東京ガス",
-      "price": 6639.0
+      "price": 6937.0
     },
     "7733": {
-      "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが2.34%と標準的。20日レンジ幅(1626-1517=109円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.5,
+      "tp_pct": 5.8,
+      "rationale": "ATR(2.3%)ベース",
+      "source": "heuristic",
       "name": "オリンパス",
-      "price": 1551.5
+      "price": 1564.0
     },
     "7741": {
-      "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが2.32%と標準的。20日レンジ幅(30400-27080=3320円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.5,
+      "tp_pct": 5.8,
+      "rationale": "ATR(2.3%)ベース",
+      "source": "heuristic",
       "name": "HOYA",
-      "price": 29245.0
+      "price": 29305.0
     },
     "7751": {
-      "sl_pct": -3.5,
-      "tp_pct": 7.0,
-      "rationale": "ATRが2.21%と標準的。20日レンジ幅(4602-4005=597円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.3,
+      "tp_pct": 5.6,
+      "rationale": "ATR(2.2%)ベース",
+      "source": "heuristic",
       "name": "キヤノン",
-      "price": 4103.0
+      "price": 4125.0
     },
     "7752": {
-      "sl_pct": -3.0,
-      "tp_pct": 6.0,
-      "rationale": "ATRが2.31%と標準的。20日レンジ幅(1439.5-1292.5=147円)の約1.5倍を考慮。",
-      "source": "ai",
+      "sl_pct": -3.5,
+      "tp_pct": 5.8,
+      "rationale": "ATR(2.3%)ベース",
+      "source": "heuristic",
       "name": "リコー",
-      "price": 1309.5
+      "price": 1313.0
     }
   }
 }
