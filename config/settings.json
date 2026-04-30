@@ -11,5 +11,16 @@
   "max_news_chars": 220,
   "important_news_max_chars": 400,
   "include_links": true,
-  "holdings": []
+  "holdings": [
+    {
+      "id": "7752-1777507737170",
+      "code": "7752",
+      "name": "リコー",
+      "shares": 100,
+      "avg_price": 1132,
+      "stop_loss": 1092.4,
+      "take_profit": 1197.7,
+      "added_at": "2026-04-30T00:08:57.170Z"
+    }
+  ]
 }
