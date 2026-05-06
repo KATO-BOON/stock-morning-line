@@ -1,21 +1,8 @@
 name: morning-brief
 
 on:
-  schedule:
-    # GitHub Actions schedule は遅延・スキップ多発する仕様（公式既知）
-    # 対策: 7:30〜9:30 JST の2時間窓に12回スケジュール、初回成功で以降スキップ(state/last_sent.json)
-    - cron: "31 22 * * *"  # 07:31 JST
-    - cron: "41 22 * * *"  # 07:41 JST
-    - cron: "51 22 * * *"  # 07:51 JST
-    - cron: "1 23 * * *"   # 08:01 JST
-    - cron: "11 23 * * *"  # 08:11 JST
-    - cron: "21 23 * * *"  # 08:21 JST
-    - cron: "31 23 * * *"  # 08:31 JST
-    - cron: "41 23 * * *"  # 08:41 JST
-    - cron: "51 23 * * *"  # 08:51 JST
-    - cron: "11 0 * * *"   # 09:11 JST
-    - cron: "21 0 * * *"   # 09:21 JST
-    - cron: "31 0 * * *"   # 09:31 JST
+  # GitHub schedule cron は遅延・スキップ多発のため使用しない
+  # Apps Script trigger (毎朝7時 JST) が workflow_dispatch でこのworkflowを起動する
   workflow_dispatch: {}
 
 jobs:
