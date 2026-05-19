@@ -11,5 +11,16 @@
   "max_news_chars": 220,
   "important_news_max_chars": 400,
   "include_links": true,
-  "holdings": []
+  "holdings": [
+    {
+      "id": "8113-1779152763883",
+      "code": "8113",
+      "name": "ユニチャーム",
+      "shares": 100,
+      "avg_price": 951,
+      "stop_loss": 922.5,
+      "take_profit": 1008.1,
+      "added_at": "2026-05-19T01:06:03.883Z"
+    }
+  ]
 }
