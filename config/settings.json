@@ -1,0 +1,15 @@
+{
+  "budget_man": 10,
+  "allow_odd_lots": false,
+  "delivery_mode": "all",
+  "allowed_weekends": [],
+  "allowed_dates": [],
+  "indices": [
+    "^N225",
+    "1306.T"
+  ],
+  "max_news_chars": 220,
+  "important_news_max_chars": 400,
+  "include_links": true,
+  "holdings": []
+}
