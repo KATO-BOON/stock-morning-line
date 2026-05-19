@@ -139,8 +139,9 @@ function renderHoldings() {
       if (confirm(`${s.holdings[i].name} を削除（売却処理）しますか？`)) {
         s.holdings.splice(i, 1);
         SML.save();
+        markDirty();
         renderHoldings();
-        SML.log('削除しました（保存ボタンで反映）');
+        SML.log('削除しました（未保存）。「保存」ボタンで repo に反映してください');
       }
     };
   });
@@ -199,24 +200,34 @@ document.getElementById('add-h').onclick = () => {
     added_at: new Date().toISOString(),
   });
   SML.save();
+  markDirty();
   ['h-code','h-shares','h-avg','h-sl','h-tp'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('h-name-display').textContent = '';
   const m = document.getElementById('h-name-manual-row');
   if (m) m.remove();
   renderHoldings();
-  SML.log(`✅ ${name} (${code}) 追加。保存ボタンで repo に反映`);
+  SML.log(`✅ ${name} (${code}) 追加（未保存）。「保存」ボタンで repo に反映してください`);
 };
 
-async function loadFromRepo() {
+let isDirty = false;  // ユーザーが編集したらtrue（自動loadで上書き防止）
+
+function markDirty() { isDirty = true; }
+
+async function loadFromRepo(force) {
   s.gh_pat = document.getElementById('gh-pat').value.trim();
   if (!s.gh_pat) return;
+  if (isDirty && !force) {
+    SML.log('⚠️ 未保存の編集があるため自動取得スキップ（「repoから再取得」で強制上書き可）');
+    return;
+  }
   SML.save();
   try {
     const cur = await SML.getRepoSettings();
     s.holdings = cur.body.holdings || [];
     SML.save();
+    isDirty = false;
     renderHoldings();
-    SML.log(`📥 repoから ${s.holdings.length}銘柄 取得`);
+    SML.log(`📥 repoから ${s.holdings.length}銘柄 取得（これが現在のrepo状態）`);
   } catch (e) { SML.log(`❌ 取得失敗: ${e.message}`); }
 }
 
@@ -225,21 +236,13 @@ document.getElementById('save').onclick = async () => {
   if (!s.gh_pat) { SML.log('❌ PATが未入力'); return; }
   SML.save();
   try {
-    // 保存前に repo の最新holdingsとマージ（他端末で追加分を消さない）
-    const cur = await SML.getRepoSettings();
-    const remoteHoldings = cur.body.holdings || [];
-    const localIds = new Set(s.holdings.map(h => h.id));
-    // ローカルにないリモートID（=他端末で追加されたもの）を取り込む
-    for (const rh of remoteHoldings) {
-      if (!localIds.has(rh.id)) s.holdings.push(rh);
-    }
-    SML.save();
-    renderHoldings();
-
+    // ローカルの状態をそのまま保存（last-write-wins・マージしない）
+    // 削除した銘柄が復活しないようにマージ処理は廃止
     await SML.patchRepoSettings({ holdings: s.holdings },
       `Update holdings (count=${s.holdings.length})`);
-    SML.log(`✅ 保存成功（${s.holdings.length}銘柄）`);
-  } catch (e) { SML.log(`❌ ${e.message}`); }
+    isDirty = false;
+    SML.log(`✅ 保存成功（${s.holdings.length}銘柄）— repoを上書きしました`);
+  } catch (e) { SML.log(`❌ 保存失敗: ${e.message}`); }
 };
 
 document.getElementById('reload').onclick = loadFromRepo;
