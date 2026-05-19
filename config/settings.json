@@ -13,14 +13,14 @@
   "include_links": true,
   "holdings": [
     {
-      "id": "8113-1779152763883",
+      "id": "8113-manual-20260519",
       "code": "8113",
-      "name": "ユニチャーム",
+      "name": "ユニ・チャーム",
       "shares": 100,
       "avg_price": 951,
       "stop_loss": 922.5,
       "take_profit": 1008.1,
-      "added_at": "2026-05-19T01:06:03.883Z"
+      "added_at": "2026-05-19T10:00:00+09:00"
     }
   ]
 }
