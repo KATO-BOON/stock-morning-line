@@ -3,5 +3,10 @@
     "date": "2026-05-18",
     "type": "take_profit",
     "price": 1424.5
+  },
+  "8113-manual-20260519": {
+    "date": "2026-05-26",
+    "type": "stop_loss",
+    "price": 906.9000244140625
   }
 }
