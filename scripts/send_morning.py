@@ -119,14 +119,21 @@ def main() -> int:
         allow_odd_lots=False,
     )
 
-    # ハルシネーション後処理: 候補リストにない銘柄コードを警告
+    # ハルシネーション後処理: 注目銘柄セクション内のコードのみ検査
+    # （ニュース本文の「6000億円」等を誤検知しないようセクション限定）
     cand_codes = {c.code for c in candidates}
     import re as _re
-    found = set(_re.findall(r"(?<!\d)(\d{4})(?!\d)", message))
-    bad = [c for c in found if c not in cand_codes]
+    # 🎯 セクションから次のセクション(⚠️/💡/━)までを抽出
+    m = _re.search(r"🎯(.*?)(?:⚠️|💡|━━|$)", message, _re.DOTALL)
+    rec_section = m.group(1) if m else ""
+    # 「① 7203 銘柄名」形式 = 行頭マーカー直後の4桁のみ拾う
+    rec_codes = set(_re.findall(r"[①②③④⑤\-・]\s*(\d{4})\b", rec_section))
+    bad = [c for c in rec_codes if c not in cand_codes]
     if bad:
-        print(f"[warn] 候補外コード検出: {bad}")
-        message += f"\n\n⚠️ 注意: 上記{','.join(bad[:5])}は候補外コードです。実在確認してから判断ください。"
+        print(f"[warn] 注目銘柄に候補外コード: {bad}")
+        message += f"\n\n⚠️ {','.join(bad[:5])} は推奨候補外。実在をご確認ください。"
+    else:
+        print(f"[ok] 注目銘柄コードは全て候補内")
 
     print("[info] LINE送信中…")
     status = broadcast(message)
