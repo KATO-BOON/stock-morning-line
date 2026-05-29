@@ -73,7 +73,13 @@ class Candidate:
     code: str
     name: str
     prev_close: float
-    lot_total: float  # 100株時の合計金額
+    lot_total: float       # 100株時の合計金額
+    ma25: float            # 25日移動平均
+    ma75: float            # 75日移動平均
+    mom_5d: float          # 5日モメンタム(%)
+    mom_20d: float         # 20日モメンタム(%)
+    trend: str             # 強い上昇/上昇/横ばい/弱い下降/下降
+    trend_score: float     # 並べ替え用スコア
 
     def to_dict(self) -> dict:
         return {
@@ -81,7 +87,44 @@ class Candidate:
             "name": self.name,
             "prev_close": round(self.prev_close, 1),
             "lot_total": int(self.lot_total),
+            "ma25": round(self.ma25, 1),
+            "ma75": round(self.ma75, 1),
+            "mom_5d": round(self.mom_5d, 1),
+            "mom_20d": round(self.mom_20d, 1),
+            "trend": self.trend,
         }
+
+
+def _classify_trend(price: float, ma25: float, ma75: float,
+                    mom_5d: float, mom_20d: float) -> tuple[str, float]:
+    """移動平均の並びとモメンタムからトレンドを分類しスコア化。
+
+    スコアが高い=上昇基調。並べ替えと足切りに使う。
+    """
+    score = 0.0
+    # 価格と移動平均の位置関係（パーフェクトオーダー重視）
+    if price > ma25:
+        score += 1.5
+    if price > ma75:
+        score += 1.5
+    if ma25 > ma75:
+        score += 2.0  # ゴールデンクロス状態（中期上昇）
+    # モメンタム
+    score += mom_20d * 0.15   # 20日の地合い
+    score += mom_5d * 0.10    # 直近の勢い
+    # 過熱気味（5日で+12%超）は少し減点（高値掴みリスク）
+    if mom_5d > 12:
+        score -= 1.0
+
+    if score >= 5.0:
+        return "強い上昇", score
+    if score >= 3.0:
+        return "上昇", score
+    if score >= 1.0:
+        return "横ばい", score
+    if score >= -1.0:
+        return "弱い下降", score
+    return "下降", score
 
 
 def fetch_candidates(budget_man: int, max_count: int = 50) -> list[Candidate]:
@@ -90,10 +133,10 @@ def fetch_candidates(budget_man: int, max_count: int = 50) -> list[Candidate]:
     max_share_price = budget_yen // 100  # 100株買える上限株価
 
     tickers = " ".join(f"{code}.T" for code, _ in UNIVERSE)
-    print(f"[info] {len(UNIVERSE)}銘柄を一括取得中…")
+    print(f"[info] {len(UNIVERSE)}銘柄を一括取得中(トレンド分析用90日)…")
     try:
         df = yf.download(
-            tickers, period="5d", interval="1d",
+            tickers, period="90d", interval="1d",
             progress=False, group_by="ticker", auto_adjust=False, threads=True,
         )
     except Exception as e:
@@ -108,28 +151,45 @@ def fetch_candidates(budget_man: int, max_count: int = 50) -> list[Candidate]:
             if sub is None or sub.empty:
                 continue
             closes = sub["Close"].dropna()
-            if closes.empty:
+            if len(closes) < 25:
                 continue
             price = float(closes.iloc[-1])
             if price <= 0 or price > max_share_price:
                 continue
+            # 移動平均
+            ma25 = float(closes.tail(25).mean())
+            ma75 = float(closes.tail(75).mean()) if len(closes) >= 75 else float(closes.mean())
+            # モメンタム(%)
+            p5 = float(closes.iloc[-6]) if len(closes) >= 6 else price
+            p20 = float(closes.iloc[-21]) if len(closes) >= 21 else price
+            mom_5d = (price - p5) / p5 * 100 if p5 else 0.0
+            mom_20d = (price - p20) / p20 * 100 if p20 else 0.0
+            trend, tscore = _classify_trend(price, ma25, ma75, mom_5d, mom_20d)
             candidates.append(Candidate(
                 code=code, name=name,
                 prev_close=price,
                 lot_total=price * 100,
+                ma25=ma25, ma75=ma75,
+                mom_5d=mom_5d, mom_20d=mom_20d,
+                trend=trend, trend_score=tscore,
             ))
         except Exception as e:
             print(f"[warn] {code} skip: {e}")
             continue
 
-    # 価格高い順 = 予算をフル活用しやすい順 → 多様性のため価格分位でサンプリング
-    candidates.sort(key=lambda c: c.prev_close, reverse=True)
-    if len(candidates) > max_count:
-        # 価格帯を3分割して各から均等に
-        step = max(1, len(candidates) // max_count)
-        candidates = candidates[::step][:max_count]
-    print(f"[info] 予算{budget_man}万円(株価{max_share_price:,}円以下) 候補 {len(candidates)}件")
-    return candidates
+    # 下降トレンドは除外（弱い下降までは残す＝逆張り余地も少し残す）
+    uptrend = [c for c in candidates if c.trend != "下降"]
+    # 全部下降なら足切りせず全件（地合い悪い日でも候補ゼロを防ぐ）
+    pool = uptrend if uptrend else candidates
+    # トレンドスコア降順（上昇基調を優先）
+    pool.sort(key=lambda c: c.trend_score, reverse=True)
+    result = pool[:max_count]
+
+    n_strong = sum(1 for c in result if c.trend == "強い上昇")
+    n_up = sum(1 for c in result if c.trend == "上昇")
+    print(f"[info] 予算{budget_man}万円(株価{max_share_price:,}円以下) "
+          f"候補{len(result)}件 (強い上昇{n_strong}/上昇{n_up}, 下降除外{len(candidates)-len(uptrend)})")
+    return result
 
 
 if __name__ == "__main__":
