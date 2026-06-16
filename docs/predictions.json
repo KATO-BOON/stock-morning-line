@@ -1,69 +1,69 @@
 {
-  "generated_at": "2026-06-16T07:33:13.652001+09:00",
+  "generated_at": "2026-06-17T07:32:44.769315+09:00",
   "predictions": {
     "7203": {
-      "sl_pct": -4.0,
-      "tp_pct": 6.6,
-      "rationale": "ATR(2.6%)ベース",
+      "sl_pct": -4.2,
+      "tp_pct": 6.9,
+      "rationale": "ATR(2.8%)ベース",
       "source": "heuristic",
       "name": "トヨタ自動車",
-      "price": 2902.5
+      "price": 2847.5
     },
     "7267": {
-      "sl_pct": -5.0,
-      "tp_pct": 8.4,
-      "rationale": "ATR(3.4%)ベース",
+      "sl_pct": -5.2,
+      "tp_pct": 8.7,
+      "rationale": "ATR(3.5%)ベース",
       "source": "heuristic",
       "name": "ホンダ",
-      "price": 1458.0
+      "price": 1439.0
     },
     "7269": {
-      "sl_pct": -4.9,
-      "tp_pct": 8.1,
-      "rationale": "ATR(3.2%)ベース",
+      "sl_pct": -5.0,
+      "tp_pct": 8.3,
+      "rationale": "ATR(3.3%)ベース",
       "source": "heuristic",
       "name": "スズキ",
-      "price": 1933.0
+      "price": 1900.0
     },
     "7270": {
-      "sl_pct": -3.9,
-      "tp_pct": 6.5,
-      "rationale": "ATR(2.6%)ベース",
+      "sl_pct": -4.0,
+      "tp_pct": 6.7,
+      "rationale": "ATR(2.7%)ベース",
       "source": "heuristic",
       "name": "SUBARU",
-      "price": 2568.0
+      "price": 2564.5
     },
     "7272": {
-      "sl_pct": -4.3,
-      "tp_pct": 7.2,
-      "rationale": "ATR(2.9%)ベース",
+      "sl_pct": -4.2,
+      "tp_pct": 7.1,
+      "rationale": "ATR(2.8%)ベース",
       "source": "heuristic",
       "name": "ヤマハ発動機",
-      "price": 1232.0
+      "price": 1221.5
     },
     "7211": {
-      "sl_pct": -7.3,
-      "tp_pct": 12.2,
-      "rationale": "ATR(4.9%)ベース",
+      "sl_pct": -7.1,
+      "tp_pct": 11.8,
+      "rationale": "ATR(4.7%)ベース",
       "source": "heuristic",
       "name": "三菱自動車",
-      "price": 337.0
+      "price": 335.3
     },
     "7202": {
-      "sl_pct": -5.5,
-      "tp_pct": 9.2,
-      "rationale": "ATR(3.7%)ベース",
+      "sl_pct": -5.7,
+      "tp_pct": 9.6,
+      "rationale": "ATR(3.8%)ベース",
       "source": "heuristic",
       "name": "いすゞ自動車",
-      "price": 2294.0
+      "price": 2249.0
     },
     "7261": {
-      "sl_pct": -4.8,
-      "tp_pct": 8.0,
-      "rationale": "ATR(3.2%)ベース",
+      "sl_pct": -5.0,
+      "tp_pct": 8.3,
+      "rationale": "ATR(3.3%)ベース",
       "source": "heuristic",
       "name": "マツダ",
-      "price": 1182.5
+      "price": 1164.5
     },
     "6201": {
       "sl_pct": -0.2,
@@ -74,76 +74,76 @@
       "price": 20450.0
     },
     "6902": {
-      "sl_pct": -4.2,
-      "tp_pct": 6.9,
-      "rationale": "ATR(2.8%)ベース",
+      "sl_pct": -4.1,
+      "tp_pct": 6.8,
+      "rationale": "ATR(2.7%)ベース",
       "source": "heuristic",
       "name": "デンソー",
-      "price": 1906.5
+      "price": 1893.5
     },
     "7259": {
-      "sl_pct": -5.7,
-      "tp_pct": 9.5,
+      "sl_pct": -5.6,
+      "tp_pct": 9.4,
       "rationale": "ATR(3.8%)ベース",
       "source": "heuristic",
       "name": "アイシン",
-      "price": 2373.0
+      "price": 2351.5
     },
     "7276": {
       "sl_pct": -4.8,
-      "tp_pct": 8.1,
+      "tp_pct": 8.0,
       "rationale": "ATR(3.2%)ベース",
       "source": "heuristic",
       "name": "小糸製作所",
-      "price": 2789.0
+      "price": 2791.0
     },
     "6758": {
-      "sl_pct": -4.8,
+      "sl_pct": -4.9,
       "tp_pct": 8.1,
-      "rationale": "ATR(3.2%)ベース",
+      "rationale": "ATR(3.3%)ベース",
       "source": "heuristic",
       "name": "ソニーG",
-      "price": 3320.0
+      "price": 3275.0
     },
     "6501": {
-      "sl_pct": -6.5,
+      "sl_pct": -6.4,
       "tp_pct": 10.8,
       "rationale": "ATR(4.3%)ベース",
       "source": "heuristic",
       "name": "日立",
-      "price": 4737.0
+      "price": 4747.0
     },
     "6503": {
       "sl_pct": -7.8,
-      "tp_pct": 13.0,
+      "tp_pct": 12.9,
       "rationale": "ATR(5.2%)ベース",
       "source": "heuristic",
       "name": "三菱電機",
-      "price": 5858.0
+      "price": 5872.0
     },
     "6752": {
-      "sl_pct": -8.7,
-      "tp_pct": 14.6,
-      "rationale": "ATR(5.8%)ベース",
+      "sl_pct": -8.6,
+      "tp_pct": 14.3,
+      "rationale": "ATR(5.7%)ベース",
       "source": "heuristic",
       "name": "パナソニックHD",
-      "price": 4010.0
+      "price": 4079.0
     },
     "6701": {
-      "sl_pct": -6.8,
-      "tp_pct": 11.3,
-      "rationale": "ATR(4.5%)ベース",
+      "sl_pct": -6.6,
+      "tp_pct": 11.0,
+      "rationale": "ATR(4.4%)ベース",
       "source": "heuristic",
       "name": "NEC",
-      "price": 3847.0
+      "price": 3849.0
     },
     "6702": {
-      "sl_pct": -7.5,
-      "tp_pct": 12.5,
-      "rationale": "ATR(5.0%)ベース",
+      "sl_pct": -7.0,
+      "tp_pct": 11.6,
+      "rationale": "ATR(4.7%)ベース",
       "source": "heuristic",
       "name": "富士通",
-      "price": 3260.0
+      "price": 3276.0
     },
     "6723": {
       "sl_pct": -10.5,
@@ -151,95 +151,95 @@
       "rationale": "ATR(7.0%)ベース",
       "source": "heuristic",
       "name": "ルネサス",
-      "price": 4488.0
+      "price": 4484.0
     },
     "6724": {
-      "sl_pct": -6.5,
-      "tp_pct": 10.8,
-      "rationale": "ATR(4.3%)ベース",
-      "source": "heuristic",
-      "name": "セイコーエプソン",
-      "price": 2835.5
-    },
-    "6770": {
-      "sl_pct": -6.9,
-      "tp_pct": 11.6,
-      "rationale": "ATR(4.6%)ベース",
-      "source": "heuristic",
-      "name": "アルプスアルパイン",
-      "price": 2107.0
-    },
-    "6857": {
-      "sl_pct": -7.8,
-      "tp_pct": 13.0,
-      "rationale": "ATR(5.2%)ベース",
-      "source": "heuristic",
-      "name": "アドバンテスト",
-      "price": 29420.0
-    },
-    "6861": {
       "sl_pct": -6.1,
       "tp_pct": 10.1,
       "rationale": "ATR(4.0%)ベース",
       "source": "heuristic",
+      "name": "セイコーエプソン",
+      "price": 2806.5
+    },
+    "6770": {
+      "sl_pct": -7.0,
+      "tp_pct": 11.6,
+      "rationale": "ATR(4.6%)ベース",
+      "source": "heuristic",
+      "name": "アルプスアルパイン",
+      "price": 2105.0
+    },
+    "6857": {
+      "sl_pct": -7.6,
+      "tp_pct": 12.7,
+      "rationale": "ATR(5.1%)ベース",
+      "source": "heuristic",
+      "name": "アドバンテスト",
+      "price": 30340.0
+    },
+    "6861": {
+      "sl_pct": -6.0,
+      "tp_pct": 10.0,
+      "rationale": "ATR(4.0%)ベース",
+      "source": "heuristic",
       "name": "キーエンス",
-      "price": 75650.0
+      "price": 75500.0
     },
     "6920": {
-      "sl_pct": -8.6,
-      "tp_pct": 14.4,
-      "rationale": "ATR(5.7%)ベース",
+      "sl_pct": -8.8,
+      "tp_pct": 14.6,
+      "rationale": "ATR(5.8%)ベース",
       "source": "heuristic",
       "name": "レーザーテック",
-      "price": 48300.0
+      "price": 46570.0
     },
     "6954": {
-      "sl_pct": -8.6,
-      "tp_pct": 14.4,
-      "rationale": "ATR(5.7%)ベース",
+      "sl_pct": -8.1,
+      "tp_pct": 13.4,
+      "rationale": "ATR(5.4%)ベース",
       "source": "heuristic",
       "name": "ファナック",
-      "price": 7344.0
+      "price": 7400.0
     },
     "6971": {
-      "sl_pct": -7.2,
-      "tp_pct": 11.9,
-      "rationale": "ATR(4.8%)ベース",
+      "sl_pct": -7.3,
+      "tp_pct": 12.2,
+      "rationale": "ATR(4.9%)ベース",
       "source": "heuristic",
       "name": "京セラ",
-      "price": 3837.0
+      "price": 3777.0
     },
     "6976": {
-      "sl_pct": -19.3,
-      "tp_pct": 32.2,
-      "rationale": "ATR(12.9%)ベース",
+      "sl_pct": -19.8,
+      "tp_pct": 33.0,
+      "rationale": "ATR(13.2%)ベース",
       "source": "heuristic",
       "name": "太陽誘電",
-      "price": 19285.0
+      "price": 20190.0
     },
     "6981": {
-      "sl_pct": -17.2,
-      "tp_pct": 28.7,
-      "rationale": "ATR(11.5%)ベース",
+      "sl_pct": -16.8,
+      "tp_pct": 27.9,
+      "rationale": "ATR(11.2%)ベース",
       "source": "heuristic",
       "name": "村田製作所",
-      "price": 10060.0
+      "price": 10530.0
     },
     "8035": {
-      "sl_pct": -8.9,
-      "tp_pct": 14.9,
+      "sl_pct": -9.0,
+      "tp_pct": 15.0,
       "rationale": "ATR(6.0%)ベース",
       "source": "heuristic",
       "name": "東京エレクトロン",
-      "price": 72760.0
+      "price": 70860.0
     },
     "4063": {
-      "sl_pct": -7.8,
-      "tp_pct": 12.9,
-      "rationale": "ATR(5.2%)ベース",
+      "sl_pct": -7.3,
+      "tp_pct": 12.2,
+      "rationale": "ATR(4.9%)ベース",
       "source": "heuristic",
       "name": "信越化学",
-      "price": 7564.0
+      "price": 7454.0
     },
     "9432": {
       "sl_pct": -2.1,
@@ -247,15 +247,15 @@
       "rationale": "ATR(1.4%)ベース",
       "source": "heuristic",
       "name": "NTT",
-      "price": 146.6
+      "price": 145.9
     },
     "9433": {
-      "sl_pct": -3.7,
-      "tp_pct": 6.2,
-      "rationale": "ATR(2.5%)ベース",
+      "sl_pct": -3.6,
+      "tp_pct": 6.0,
+      "rationale": "ATR(2.4%)ベース",
       "source": "heuristic",
       "name": "KDDI",
-      "price": 2718.0
+      "price": 2714.5
     },
     "9434": {
       "sl_pct": -2.6,
@@ -263,31 +263,31 @@
       "rationale": "ATR(1.7%)ベース",
       "source": "heuristic",
       "name": "ソフトバンク",
-      "price": 210.2
+      "price": 211.6
     },
     "9984": {
-      "sl_pct": -14.4,
-      "tp_pct": 24.0,
-      "rationale": "ATR(9.6%)ベース",
+      "sl_pct": -13.8,
+      "tp_pct": 23.1,
+      "rationale": "ATR(9.2%)ベース",
       "source": "heuristic",
       "name": "ソフトバンクG",
-      "price": 7139.0
+      "price": 7102.0
     },
     "4385": {
-      "sl_pct": -6.6,
-      "tp_pct": 11.1,
+      "sl_pct": -6.5,
+      "tp_pct": 10.9,
       "rationale": "ATR(4.4%)ベース",
       "source": "heuristic",
       "name": "メルカリ",
-      "price": 3720.0
+      "price": 3768.0
     },
     "4307": {
       "sl_pct": -6.9,
-      "tp_pct": 11.5,
+      "tp_pct": 11.6,
       "rationale": "ATR(4.6%)ベース",
       "source": "heuristic",
       "name": "野村総研",
-      "price": 4565.0
+      "price": 4505.0
     },
     "6098": {
       "sl_pct": -6.3,
@@ -295,71 +295,71 @@
       "rationale": "ATR(4.2%)ベース",
       "source": "heuristic",
       "name": "リクルートHD",
-      "price": 10720.0
+      "price": 10750.0
     },
     "8306": {
-      "sl_pct": -4.2,
+      "sl_pct": -4.3,
       "tp_pct": 7.1,
-      "rationale": "ATR(2.8%)ベース",
-      "source": "heuristic",
-      "name": "三菱UFJ",
-      "price": 3242.0
-    },
-    "8316": {
-      "sl_pct": -4.4,
-      "tp_pct": 7.3,
       "rationale": "ATR(2.9%)ベース",
       "source": "heuristic",
+      "name": "三菱UFJ",
+      "price": 3228.0
+    },
+    "8316": {
+      "sl_pct": -4.5,
+      "tp_pct": 7.5,
+      "rationale": "ATR(3.0%)ベース",
+      "source": "heuristic",
       "name": "三井住友FG",
-      "price": 6519.0
+      "price": 6409.0
     },
     "8411": {
-      "sl_pct": -5.4,
+      "sl_pct": -5.3,
       "tp_pct": 8.9,
       "rationale": "ATR(3.6%)ベース",
       "source": "heuristic",
       "name": "みずほFG",
-      "price": 7793.0
+      "price": 7757.0
     },
     "8591": {
-      "sl_pct": -4.0,
-      "tp_pct": 6.7,
-      "rationale": "ATR(2.7%)ベース",
+      "sl_pct": -3.8,
+      "tp_pct": 6.3,
+      "rationale": "ATR(2.5%)ベース",
       "source": "heuristic",
       "name": "オリックス",
-      "price": 6170.0
+      "price": 6305.0
     },
     "8601": {
-      "sl_pct": -3.8,
+      "sl_pct": -3.7,
       "tp_pct": 6.2,
       "rationale": "ATR(2.5%)ベース",
       "source": "heuristic",
       "name": "大和証券G",
-      "price": 1595.0
+      "price": 1602.5
     },
     "8604": {
-      "sl_pct": -4.0,
-      "tp_pct": 6.6,
-      "rationale": "ATR(2.6%)ベース",
+      "sl_pct": -4.1,
+      "tp_pct": 6.9,
+      "rationale": "ATR(2.8%)ベース",
       "source": "heuristic",
       "name": "野村HD",
-      "price": 1414.0
+      "price": 1415.0
     },
     "8630": {
-      "sl_pct": -4.0,
-      "tp_pct": 6.6,
-      "rationale": "ATR(2.6%)ベース",
+      "sl_pct": -3.8,
+      "tp_pct": 6.3,
+      "rationale": "ATR(2.5%)ベース",
       "source": "heuristic",
       "name": "SOMPOHD",
-      "price": 6242.0
+      "price": 6248.0
     },
     "8725": {
-      "sl_pct": -3.5,
-      "tp_pct": 5.9,
+      "sl_pct": -3.6,
+      "tp_pct": 6.0,
       "rationale": "ATR(2.4%)ベース",
       "source": "heuristic",
       "name": "MS&AD",
-      "price": 4673.0
+      "price": 4616.0
     },
     "8766": {
       "sl_pct": -3.6,
@@ -367,151 +367,151 @@
       "rationale": "ATR(2.4%)ベース",
       "source": "heuristic",
       "name": "東京海上HD",
-      "price": 7301.0
+      "price": 7288.0
     },
     "6178": {
-      "sl_pct": -4.5,
-      "tp_pct": 7.6,
-      "rationale": "ATR(3.0%)ベース",
+      "sl_pct": -4.7,
+      "tp_pct": 7.9,
+      "rationale": "ATR(3.1%)ベース",
       "source": "heuristic",
       "name": "日本郵政",
-      "price": 2285.5
+      "price": 2264.5
     },
     "8001": {
-      "sl_pct": -3.2,
-      "tp_pct": 5.3,
-      "rationale": "ATR(2.1%)ベース",
+      "sl_pct": -3.4,
+      "tp_pct": 5.7,
+      "rationale": "ATR(2.3%)ベース",
       "source": "heuristic",
       "name": "伊藤忠",
-      "price": 1907.0
+      "price": 1859.5
     },
     "8002": {
       "sl_pct": -4.9,
-      "tp_pct": 8.1,
-      "rationale": "ATR(3.2%)ベース",
+      "tp_pct": 8.2,
+      "rationale": "ATR(3.3%)ベース",
       "source": "heuristic",
       "name": "丸紅",
-      "price": 5042.0
+      "price": 4921.0
     },
     "8015": {
-      "sl_pct": -5.9,
-      "tp_pct": 9.8,
+      "sl_pct": -5.8,
+      "tp_pct": 9.7,
       "rationale": "ATR(3.9%)ベース",
       "source": "heuristic",
       "name": "豊田通商",
-      "price": 6505.0
+      "price": 6416.0
     },
     "8031": {
-      "sl_pct": -4.5,
-      "tp_pct": 7.5,
-      "rationale": "ATR(3.0%)ベース",
-      "source": "heuristic",
-      "name": "三井物産",
-      "price": 4838.0
-    },
-    "8053": {
       "sl_pct": -4.6,
       "tp_pct": 7.7,
       "rationale": "ATR(3.1%)ベース",
       "source": "heuristic",
+      "name": "三井物産",
+      "price": 4703.0
+    },
+    "8053": {
+      "sl_pct": -4.5,
+      "tp_pct": 7.5,
+      "rationale": "ATR(3.0%)ベース",
+      "source": "heuristic",
       "name": "住友商事",
-      "price": 6567.0
+      "price": 6529.0
     },
     "8058": {
-      "sl_pct": -4.3,
-      "tp_pct": 7.2,
-      "rationale": "ATR(2.9%)ベース",
+      "sl_pct": -4.5,
+      "tp_pct": 7.6,
+      "rationale": "ATR(3.0%)ベース",
       "source": "heuristic",
       "name": "三菱商事",
-      "price": 4728.0
+      "price": 4595.0
     },
     "8801": {
-      "sl_pct": -4.5,
-      "tp_pct": 7.5,
-      "rationale": "ATR(3.0%)ベース",
+      "sl_pct": -4.8,
+      "tp_pct": 7.9,
+      "rationale": "ATR(3.2%)ベース",
       "source": "heuristic",
       "name": "三井不動産",
-      "price": 1570.5
+      "price": 1530.0
     },
     "8802": {
-      "sl_pct": -4.5,
-      "tp_pct": 7.5,
-      "rationale": "ATR(3.0%)ベース",
+      "sl_pct": -4.7,
+      "tp_pct": 7.9,
+      "rationale": "ATR(3.1%)ベース",
       "source": "heuristic",
       "name": "三菱地所",
-      "price": 4277.0
+      "price": 4185.0
     },
     "1925": {
+      "sl_pct": -3.3,
+      "tp_pct": 5.6,
+      "rationale": "ATR(2.2%)ベース",
+      "source": "heuristic",
+      "name": "大和ハウス",
+      "price": 4346.0
+    },
+    "1928": {
+      "sl_pct": -3.7,
+      "tp_pct": 6.1,
+      "rationale": "ATR(2.5%)ベース",
+      "source": "heuristic",
+      "name": "積水ハウス",
+      "price": 3296.0
+    },
+    "4502": {
+      "sl_pct": -3.5,
+      "tp_pct": 5.8,
+      "rationale": "ATR(2.3%)ベース",
+      "source": "heuristic",
+      "name": "武田薬品",
+      "price": 5020.0
+    },
+    "4503": {
+      "sl_pct": -4.7,
+      "tp_pct": 7.8,
+      "rationale": "ATR(3.1%)ベース",
+      "source": "heuristic",
+      "name": "アステラス",
+      "price": 2144.0
+    },
+    "4519": {
+      "sl_pct": -4.4,
+      "tp_pct": 7.3,
+      "rationale": "ATR(2.9%)ベース",
+      "source": "heuristic",
+      "name": "中外製薬",
+      "price": 7523.0
+    },
+    "4523": {
+      "sl_pct": -3.8,
+      "tp_pct": 6.4,
+      "rationale": "ATR(2.5%)ベース",
+      "source": "heuristic",
+      "name": "エーザイ",
+      "price": 3750.0
+    },
+    "4543": {
+      "sl_pct": -5.3,
+      "tp_pct": 8.8,
+      "rationale": "ATR(3.5%)ベース",
+      "source": "heuristic",
+      "name": "テルモ",
+      "price": 2220.0
+    },
+    "4568": {
+      "sl_pct": -5.0,
+      "tp_pct": 8.3,
+      "rationale": "ATR(3.3%)ベース",
+      "source": "heuristic",
+      "name": "第一三共",
+      "price": 2519.5
+    },
+    "2502": {
       "sl_pct": -3.2,
       "tp_pct": 5.3,
       "rationale": "ATR(2.1%)ベース",
       "source": "heuristic",
-      "name": "大和ハウス",
-      "price": 4388.0
-    },
-    "1928": {
-      "sl_pct": -3.5,
-      "tp_pct": 5.9,
-      "rationale": "ATR(2.4%)ベース",
-      "source": "heuristic",
-      "name": "積水ハウス",
-      "price": 3335.0
-    },
-    "4502": {
-      "sl_pct": -3.3,
-      "tp_pct": 5.5,
-      "rationale": "ATR(2.2%)ベース",
-      "source": "heuristic",
-      "name": "武田薬品",
-      "price": 5088.0
-    },
-    "4503": {
-      "sl_pct": -5.1,
-      "tp_pct": 8.4,
-      "rationale": "ATR(3.4%)ベース",
-      "source": "heuristic",
-      "name": "アステラス",
-      "price": 2152.5
-    },
-    "4519": {
-      "sl_pct": -4.5,
-      "tp_pct": 7.4,
-      "rationale": "ATR(3.0%)ベース",
-      "source": "heuristic",
-      "name": "中外製薬",
-      "price": 7428.0
-    },
-    "4523": {
-      "sl_pct": -3.7,
-      "tp_pct": 6.2,
-      "rationale": "ATR(2.5%)ベース",
-      "source": "heuristic",
-      "name": "エーザイ",
-      "price": 3821.0
-    },
-    "4543": {
-      "sl_pct": -5.4,
-      "tp_pct": 9.0,
-      "rationale": "ATR(3.6%)ベース",
-      "source": "heuristic",
-      "name": "テルモ",
-      "price": 2237.0
-    },
-    "4568": {
-      "sl_pct": -5.2,
-      "tp_pct": 8.7,
-      "rationale": "ATR(3.5%)ベース",
-      "source": "heuristic",
-      "name": "第一三共",
-      "price": 2546.0
-    },
-    "2502": {
-      "sl_pct": -3.1,
-      "tp_pct": 5.2,
-      "rationale": "ATR(2.1%)ベース",
-      "source": "heuristic",
       "name": "アサヒG",
-      "price": 1510.0
+      "price": 1503.5
     },
     "2503": {
       "sl_pct": -3.8,
@@ -519,7 +519,7 @@
       "rationale": "ATR(2.5%)ベース",
       "source": "heuristic",
       "name": "キリンHD",
-      "price": 2682.0
+      "price": 2720.0
     },
     "2914": {
       "sl_pct": -2.9,
@@ -527,31 +527,31 @@
       "rationale": "ATR(1.9%)ベース",
       "source": "heuristic",
       "name": "JT",
-      "price": 6070.0
+      "price": 6099.0
     },
     "8267": {
       "sl_pct": -4.9,
-      "tp_pct": 8.1,
-      "rationale": "ATR(3.2%)ベース",
+      "tp_pct": 8.2,
+      "rationale": "ATR(3.3%)ベース",
       "source": "heuristic",
       "name": "イオン",
-      "price": 1382.5
+      "price": 1361.0
     },
     "3382": {
-      "sl_pct": -3.8,
-      "tp_pct": 6.3,
-      "rationale": "ATR(2.5%)ベース",
-      "source": "heuristic",
-      "name": "セブン&アイ",
-      "price": 1939.5
-    },
-    "9983": {
       "sl_pct": -4.0,
       "tp_pct": 6.7,
       "rationale": "ATR(2.7%)ベース",
       "source": "heuristic",
+      "name": "セブン&アイ",
+      "price": 1912.5
+    },
+    "9983": {
+      "sl_pct": -3.8,
+      "tp_pct": 6.4,
+      "rationale": "ATR(2.5%)ベース",
+      "source": "heuristic",
       "name": "ファーストリテ",
-      "price": 81080.0
+      "price": 81950.0
     },
     "8113": {
       "sl_pct": -4.2,
@@ -559,135 +559,135 @@
       "rationale": "ATR(2.8%)ベース",
       "source": "heuristic",
       "name": "ユニチャーム",
-      "price": 928.4
+      "price": 932.9
     },
     "4452": {
       "sl_pct": -2.7,
-      "tp_pct": 4.6,
+      "tp_pct": 4.4,
       "rationale": "ATR(1.8%)ベース",
       "source": "heuristic",
       "name": "花王",
-      "price": 6055.0
+      "price": 6087.0
     },
     "4901": {
-      "sl_pct": -4.8,
-      "tp_pct": 8.0,
-      "rationale": "ATR(3.2%)ベース",
+      "sl_pct": -4.5,
+      "tp_pct": 7.5,
+      "rationale": "ATR(3.0%)ベース",
       "source": "heuristic",
       "name": "富士フイルム",
-      "price": 3439.0
+      "price": 3379.0
     },
     "4911": {
-      "sl_pct": -6.3,
-      "tp_pct": 10.6,
-      "rationale": "ATR(4.2%)ベース",
+      "sl_pct": -6.4,
+      "tp_pct": 10.8,
+      "rationale": "ATR(4.3%)ベース",
       "source": "heuristic",
       "name": "資生堂",
-      "price": 2597.0
+      "price": 2552.0
     },
     "6273": {
-      "sl_pct": -6.6,
-      "tp_pct": 11.1,
-      "rationale": "ATR(4.4%)ベース",
+      "sl_pct": -6.7,
+      "tp_pct": 11.2,
+      "rationale": "ATR(4.5%)ベース",
       "source": "heuristic",
       "name": "SMC",
-      "price": 70130.0
+      "price": 69030.0
     },
     "6301": {
-      "sl_pct": -6.0,
-      "tp_pct": 9.9,
+      "sl_pct": -6.1,
+      "tp_pct": 10.1,
       "rationale": "ATR(4.0%)ベース",
       "source": "heuristic",
       "name": "コマツ",
-      "price": 6817.0
+      "price": 6650.0
     },
     "6326": {
-      "sl_pct": -6.3,
-      "tp_pct": 10.5,
-      "rationale": "ATR(4.2%)ベース",
+      "sl_pct": -6.0,
+      "tp_pct": 10.0,
+      "rationale": "ATR(4.0%)ベース",
       "source": "heuristic",
       "name": "クボタ",
-      "price": 2843.0
+      "price": 2869.5
     },
     "6367": {
-      "sl_pct": -4.3,
-      "tp_pct": 7.2,
-      "rationale": "ATR(2.9%)ベース",
+      "sl_pct": -4.1,
+      "tp_pct": 6.8,
+      "rationale": "ATR(2.7%)ベース",
       "source": "heuristic",
       "name": "ダイキン",
-      "price": 23360.0
+      "price": 23590.0
     },
     "7011": {
-      "sl_pct": -6.9,
-      "tp_pct": 11.5,
-      "rationale": "ATR(4.6%)ベース",
+      "sl_pct": -6.6,
+      "tp_pct": 11.0,
+      "rationale": "ATR(4.4%)ベース",
       "source": "heuristic",
       "name": "三菱重工",
-      "price": 3659.0
+      "price": 3810.0
     },
     "7012": {
-      "sl_pct": -8.7,
-      "tp_pct": 14.4,
-      "rationale": "ATR(5.8%)ベース",
+      "sl_pct": -7.9,
+      "tp_pct": 13.1,
+      "rationale": "ATR(5.3%)ベース",
       "source": "heuristic",
       "name": "川崎重工",
-      "price": 2905.5
+      "price": 3031.0
     },
     "5108": {
+      "sl_pct": -3.3,
+      "tp_pct": 5.6,
+      "rationale": "ATR(2.2%)ベース",
+      "source": "heuristic",
+      "name": "ブリヂストン",
+      "price": 3478.0
+    },
+    "4188": {
+      "sl_pct": -5.9,
+      "tp_pct": 9.9,
+      "rationale": "ATR(4.0%)ベース",
+      "source": "heuristic",
+      "name": "三菱ケミG",
+      "price": 1104.5
+    },
+    "3402": {
+      "sl_pct": -5.4,
+      "tp_pct": 9.1,
+      "rationale": "ATR(3.6%)ベース",
+      "source": "heuristic",
+      "name": "東レ",
+      "price": 1177.0
+    },
+    "3407": {
+      "sl_pct": -4.7,
+      "tp_pct": 7.8,
+      "rationale": "ATR(3.1%)ベース",
+      "source": "heuristic",
+      "name": "旭化成",
+      "price": 1761.5
+    },
+    "5201": {
+      "sl_pct": -8.2,
+      "tp_pct": 13.7,
+      "rationale": "ATR(5.5%)ベース",
+      "source": "heuristic",
+      "name": "AGC",
+      "price": 7270.0
+    },
+    "5401": {
+      "sl_pct": -3.6,
+      "tp_pct": 6.0,
+      "rationale": "ATR(2.4%)ベース",
+      "source": "heuristic",
+      "name": "日本製鉄",
+      "price": 566.0
+    },
+    "5411": {
       "sl_pct": -3.3,
       "tp_pct": 5.5,
       "rationale": "ATR(2.2%)ベース",
       "source": "heuristic",
-      "name": "ブリヂストン",
-      "price": 3513.0
-    },
-    "4188": {
-      "sl_pct": -5.9,
-      "tp_pct": 9.8,
-      "rationale": "ATR(3.9%)ベース",
-      "source": "heuristic",
-      "name": "三菱ケミG",
-      "price": 1128.5
-    },
-    "3402": {
-      "sl_pct": -5.4,
-      "tp_pct": 9.0,
-      "rationale": "ATR(3.6%)ベース",
-      "source": "heuristic",
-      "name": "東レ",
-      "price": 1197.5
-    },
-    "3407": {
-      "sl_pct": -4.6,
-      "tp_pct": 7.7,
-      "rationale": "ATR(3.1%)ベース",
-      "source": "heuristic",
-      "name": "旭化成",
-      "price": 1764.5
-    },
-    "5201": {
-      "sl_pct": -8.1,
-      "tp_pct": 13.5,
-      "rationale": "ATR(5.4%)ベース",
-      "source": "heuristic",
-      "name": "AGC",
-      "price": 7382.0
-    },
-    "5401": {
-      "sl_pct": -3.6,
-      "tp_pct": 5.9,
-      "rationale": "ATR(2.4%)ベース",
-      "source": "heuristic",
-      "name": "日本製鉄",
-      "price": 574.2
-    },
-    "5411": {
-      "sl_pct": -3.5,
-      "tp_pct": 5.8,
-      "rationale": "ATR(2.3%)ベース",
-      "source": "heuristic",
       "name": "JFE",
-      "price": 1647.5
+      "price": 1647.0
     },
     "5713": {
       "sl_pct": -9.3,
@@ -695,15 +695,15 @@
       "rationale": "ATR(6.2%)ベース",
       "source": "heuristic",
       "name": "住友金属鉱山",
-      "price": 9200.0
+      "price": 8863.0
     },
     "5802": {
-      "sl_pct": -13.0,
-      "tp_pct": 21.7,
-      "rationale": "ATR(8.7%)ベース",
+      "sl_pct": -12.3,
+      "tp_pct": 20.5,
+      "rationale": "ATR(8.2%)ベース",
       "source": "heuristic",
       "name": "住友電工",
-      "price": 11530.0
+      "price": 12320.0
     },
     "7974": {
       "sl_pct": -6.0,
@@ -711,143 +711,143 @@
       "rationale": "ATR(4.0%)ベース",
       "source": "heuristic",
       "name": "任天堂",
-      "price": 7110.0
+      "price": 7218.0
     },
     "7832": {
       "sl_pct": -4.5,
-      "tp_pct": 7.6,
+      "tp_pct": 7.4,
       "rationale": "ATR(3.0%)ベース",
       "source": "heuristic",
       "name": "バンダイナムコ",
-      "price": 3594.0
+      "price": 3589.0
     },
     "4661": {
-      "sl_pct": -4.2,
-      "tp_pct": 7.1,
-      "rationale": "ATR(2.8%)ベース",
-      "source": "heuristic",
-      "name": "オリエンタルランド",
-      "price": 2263.0
-    },
-    "4324": {
-      "sl_pct": -4.3,
-      "tp_pct": 7.1,
-      "rationale": "ATR(2.9%)ベース",
-      "source": "heuristic",
-      "name": "電通G",
-      "price": 3101.0
-    },
-    "9020": {
-      "sl_pct": -4.0,
-      "tp_pct": 6.7,
-      "rationale": "ATR(2.7%)ベース",
-      "source": "heuristic",
-      "name": "JR東日本",
-      "price": 3377.0
-    },
-    "9021": {
-      "sl_pct": -3.3,
-      "tp_pct": 5.4,
-      "rationale": "ATR(2.2%)ベース",
-      "source": "heuristic",
-      "name": "JR西日本",
-      "price": 2565.0
-    },
-    "9022": {
-      "sl_pct": -3.4,
-      "tp_pct": 5.7,
-      "rationale": "ATR(2.3%)ベース",
-      "source": "heuristic",
-      "name": "JR東海",
-      "price": 3350.0
-    },
-    "9101": {
       "sl_pct": -4.1,
       "tp_pct": 6.8,
       "rationale": "ATR(2.7%)ベース",
       "source": "heuristic",
+      "name": "オリエンタルランド",
+      "price": 2276.0
+    },
+    "4324": {
+      "sl_pct": -4.3,
+      "tp_pct": 7.1,
+      "rationale": "ATR(2.8%)ベース",
+      "source": "heuristic",
+      "name": "電通G",
+      "price": 3122.0
+    },
+    "9020": {
+      "sl_pct": -3.8,
+      "tp_pct": 6.4,
+      "rationale": "ATR(2.5%)ベース",
+      "source": "heuristic",
+      "name": "JR東日本",
+      "price": 3398.0
+    },
+    "9021": {
+      "sl_pct": -3.2,
+      "tp_pct": 5.4,
+      "rationale": "ATR(2.1%)ベース",
+      "source": "heuristic",
+      "name": "JR西日本",
+      "price": 2569.5
+    },
+    "9022": {
+      "sl_pct": -3.5,
+      "tp_pct": 5.8,
+      "rationale": "ATR(2.3%)ベース",
+      "source": "heuristic",
+      "name": "JR東海",
+      "price": 3351.0
+    },
+    "9101": {
+      "sl_pct": -4.1,
+      "tp_pct": 6.9,
+      "rationale": "ATR(2.8%)ベース",
+      "source": "heuristic",
       "name": "日本郵船",
-      "price": 5524.0
+      "price": 5466.0
     },
     "9104": {
-      "sl_pct": -5.0,
-      "tp_pct": 8.3,
-      "rationale": "ATR(3.3%)ベース",
+      "sl_pct": -5.2,
+      "tp_pct": 8.7,
+      "rationale": "ATR(3.5%)ベース",
       "source": "heuristic",
       "name": "商船三井",
-      "price": 5686.0
+      "price": 5559.0
     },
     "9202": {
       "sl_pct": -3.4,
-      "tp_pct": 5.7,
+      "tp_pct": 5.8,
       "rationale": "ATR(2.3%)ベース",
       "source": "heuristic",
       "name": "ANA",
-      "price": 3010.0
+      "price": 3043.0
     },
     "9501": {
-      "sl_pct": -6.7,
-      "tp_pct": 11.2,
+      "sl_pct": -6.8,
+      "tp_pct": 11.3,
       "rationale": "ATR(4.5%)ベース",
       "source": "heuristic",
       "name": "東京電力HD",
-      "price": 531.3
+      "price": 513.5
     },
     "9502": {
+      "sl_pct": -4.6,
+      "tp_pct": 7.7,
+      "rationale": "ATR(3.1%)ベース",
+      "source": "heuristic",
+      "name": "中部電力",
+      "price": 2825.0
+    },
+    "9503": {
+      "sl_pct": -3.7,
+      "tp_pct": 6.2,
+      "rationale": "ATR(2.5%)ベース",
+      "source": "heuristic",
+      "name": "関西電力",
+      "price": 2308.0
+    },
+    "9531": {
+      "sl_pct": -4.3,
+      "tp_pct": 7.2,
+      "rationale": "ATR(2.9%)ベース",
+      "source": "heuristic",
+      "name": "東京ガス",
+      "price": 6223.0
+    },
+    "7733": {
       "sl_pct": -4.7,
       "tp_pct": 7.8,
       "rationale": "ATR(3.1%)ベース",
       "source": "heuristic",
-      "name": "中部電力",
-      "price": 2861.0
-    },
-    "9503": {
-      "sl_pct": -3.6,
-      "tp_pct": 5.9,
-      "rationale": "ATR(2.4%)ベース",
-      "source": "heuristic",
-      "name": "関西電力",
-      "price": 2367.5
-    },
-    "9531": {
-      "sl_pct": -4.4,
-      "tp_pct": 7.3,
-      "rationale": "ATR(2.9%)ベース",
-      "source": "heuristic",
-      "name": "東京ガス",
-      "price": 6261.0
-    },
-    "7733": {
-      "sl_pct": -4.8,
-      "tp_pct": 8.0,
-      "rationale": "ATR(3.2%)ベース",
-      "source": "heuristic",
       "name": "オリンパス",
-      "price": 1686.0
+      "price": 1662.0
     },
     "7741": {
-      "sl_pct": -4.7,
-      "tp_pct": 7.9,
-      "rationale": "ATR(3.1%)ベース",
+      "sl_pct": -4.2,
+      "tp_pct": 7.0,
+      "rationale": "ATR(2.8%)ベース",
       "source": "heuristic",
       "name": "HOYA",
-      "price": 26630.0
+      "price": 27065.0
     },
     "7751": {
       "sl_pct": -2.9,
       "tp_pct": 4.9,
-      "rationale": "ATR(2.0%)ベース",
+      "rationale": "ATR(1.9%)ベース",
       "source": "heuristic",
       "name": "キヤノン",
-      "price": 4327.0
+      "price": 4306.0
     },
     "7752": {
       "sl_pct": -3.8,
-      "tp_pct": 6.3,
-      "rationale": "ATR(2.5%)ベース",
+      "tp_pct": 6.4,
+      "rationale": "ATR(2.6%)ベース",
       "source": "heuristic",
       "name": "リコー",
-      "price": 1465.5
+      "price": 1462.5
     }
   }
 }
