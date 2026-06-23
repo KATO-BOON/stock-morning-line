@@ -38,11 +38,11 @@ class Snapshot:
 
 
 # カテゴリ別シンボル定義
-# 注: ^N225(指数)はyfinanceで1日遅延するため、日経225連動ETF(1321.T)を使う。
-#     1321.Tは前場引け直後から当日値が反映され鮮度が高い。
+# 注: 日経平均は専用ロジック(_nikkei_snapshot)で取得するためTARGETSには入れない。
+#     ^N225は1日遅延、ETF(1321.T)は指数の約1.047倍で取引されるため、
+#     両方使って「鮮度=ETF, 水準=指数」に変換する。
 TARGETS: list[tuple[str, str, str]] = [
-    # 日本市場
-    ("1321.T", "日経平均(225連動ETF)", "jp_index"),
+    # 日本市場（日経は別処理。TOPIXはETF値そのまま=変化率は同じ）
     ("1306.T", "TOPIX(ETF)", "jp_index"),
     # 米国市場
     ("^DJI", "NYダウ", "us_index"),
@@ -99,8 +99,68 @@ def snapshot(symbol: str, name: str, category: str) -> Snapshot | None:
         return None
 
 
+def _nikkei_snapshot() -> Snapshot | None:
+    """日経平均を「鮮度=ETF / 水準=指数」で取得。
+
+    ^N225は1日遅延、1321.T(ETF)は指数の約1.047倍で取引される。
+    直近の共通日で 指数/ETF 比率を求め、最新ETF値に掛けて指数水準を推定する。
+    ^N225が最新まで揃っていればそのまま使う。
+    """
+    try:
+        idx = yf.Ticker("^N225").history(period="40d", interval="1d", auto_adjust=False)
+        etf = yf.Ticker("1321.T").history(period="40d", interval="1d", auto_adjust=False)
+        idx_c = idx["Close"].dropna()
+        etf_c = etf["Close"].dropna()
+        if etf_c.empty or len(etf_c) < 15:
+            # ETFが取れなければ指数だけで通常処理にフォールバック
+            return snapshot("^N225", "日経平均", "jp_index")
+
+        # 直近の共通日で比率(指数/ETF)を算出（直近5共通日の中央値で安定化）
+        common = idx_c.index.intersection(etf_c.index)
+        if len(common) >= 3:
+            import statistics
+            ratios = [float(idx_c[d]) / float(etf_c[d]) for d in common[-5:] if etf_c[d]]
+            ratio = statistics.median(ratios) if ratios else 1.0
+        else:
+            ratio = 0.955  # 経験値フォールバック
+
+        # ^N225が最新まで揃っているならそのまま（最も正確）
+        if not idx_c.empty and idx_c.index[-1] >= etf_c.index[-1]:
+            return snapshot("^N225", "日経平均", "jp_index")
+
+        # ETF系列を指数水準に変換して通常計算（鮮度はETF基準）
+        synth = etf_c * ratio
+        prev_close = float(synth.iloc[-1])
+        prev_prev = float(synth.iloc[-2]) if len(synth) >= 2 else prev_close
+        change_pct = (prev_close - prev_prev) / prev_prev * 100 if prev_prev else 0.0
+        # ATR/レンジも合成系列(指数水準)で計算
+        synth_df = etf.copy()
+        for col in ("High", "Low", "Close"):
+            if col in synth_df:
+                synth_df[col] = synth_df[col] * ratio
+        synth_df = synth_df.dropna(subset=["Close"])
+        atr14 = _atr(synth_df, 14)
+        high_20d = float(synth_df["High"].tail(20).max())
+        low_20d = float(synth_df["Low"].tail(20).min())
+        as_of = etf_c.index[-1].strftime("%Y-%m-%d")
+        print(f"[info] 日経平均: ETF×比率{ratio:.3f}で指数換算 {prev_close:,.0f} (as_of {as_of})")
+        return Snapshot(
+            symbol="^N225", name="日経平均", category="jp_index",
+            prev_close=prev_close, change_pct=change_pct,
+            high_20d=high_20d, low_20d=low_20d, atr14=atr14,
+            range_low=prev_close - atr14, range_high=prev_close + atr14,
+            as_of=as_of,
+        )
+    except Exception as e:
+        print(f"[warn] 日経平均取得失敗: {e}")
+        return snapshot("^N225", "日経平均", "jp_index")
+
+
 def all_snapshots() -> list[Snapshot]:
     result = []
+    nk = _nikkei_snapshot()
+    if nk:
+        result.append(nk)
     for sym, name, cat in TARGETS:
         snap = snapshot(sym, name, cat)
         if snap:
