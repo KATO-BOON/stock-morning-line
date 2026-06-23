@@ -1,10 +1,15 @@
 """日本株・海外市場・為替・商品のスナップショット取得。"""
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from typing import Dict
 
 import yfinance as yf
+
+# 予想レンジの幅 = 前日終値 ± (ATR14 × RANGE_MULT)
+# ±1ATRは広すぎるため0.7に。環境変数RANGE_ATR_MULTで上書き可。
+RANGE_MULT = float(os.environ.get("RANGE_ATR_MULT", "0.7"))
 
 
 @dataclass
@@ -90,8 +95,8 @@ def snapshot(symbol: str, name: str, category: str) -> Snapshot | None:
             high_20d=high_20d,
             low_20d=low_20d,
             atr14=atr14,
-            range_low=prev_close - atr14,
-            range_high=prev_close + atr14,
+            range_low=prev_close - atr14 * RANGE_MULT,
+            range_high=prev_close + atr14 * RANGE_MULT,
             as_of=as_of,
         )
     except Exception as e:
@@ -148,7 +153,8 @@ def _nikkei_snapshot() -> Snapshot | None:
             symbol="^N225", name="日経平均", category="jp_index",
             prev_close=prev_close, change_pct=change_pct,
             high_20d=high_20d, low_20d=low_20d, atr14=atr14,
-            range_low=prev_close - atr14, range_high=prev_close + atr14,
+            range_low=prev_close - atr14 * RANGE_MULT,
+            range_high=prev_close + atr14 * RANGE_MULT,
             as_of=as_of,
         )
     except Exception as e:
