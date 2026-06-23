@@ -19,6 +19,7 @@ class Snapshot:
     atr14: float
     range_low: float
     range_high: float
+    as_of: str  # 終値の日付 YYYY-MM-DD（鮮度確認用）
 
     def to_dict(self) -> dict:
         return {
@@ -32,13 +33,16 @@ class Snapshot:
             "atr14": round(self.atr14, 2),
             "range_low": round(self.range_low, 2),
             "range_high": round(self.range_high, 2),
+            "as_of": self.as_of,
         }
 
 
 # カテゴリ別シンボル定義
+# 注: ^N225(指数)はyfinanceで1日遅延するため、日経225連動ETF(1321.T)を使う。
+#     1321.Tは前場引け直後から当日値が反映され鮮度が高い。
 TARGETS: list[tuple[str, str, str]] = [
     # 日本市場
-    ("^N225", "日経平均", "jp_index"),
+    ("1321.T", "日経平均(225連動ETF)", "jp_index"),
     ("1306.T", "TOPIX(ETF)", "jp_index"),
     # 米国市場
     ("^DJI", "NYダウ", "us_index"),
@@ -76,6 +80,7 @@ def snapshot(symbol: str, name: str, category: str) -> Snapshot | None:
         high_20d = float(hist["High"].tail(20).max())
         low_20d = float(hist["Low"].tail(20).min())
         atr14 = _atr(hist, 14)
+        as_of = hist.index[-1].strftime("%Y-%m-%d")
         return Snapshot(
             symbol=symbol,
             name=name,
@@ -87,6 +92,7 @@ def snapshot(symbol: str, name: str, category: str) -> Snapshot | None:
             atr14=atr14,
             range_low=prev_close - atr14,
             range_high=prev_close + atr14,
+            as_of=as_of,
         )
     except Exception as e:
         print(f"[warn] {symbol} 取得失敗: {e}")

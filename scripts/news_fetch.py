@@ -28,12 +28,20 @@ FEEDS: list[tuple[str, str]] = [
     ("https://news.yahoo.co.jp/rss/categories/world.xml", "low"),             # Yahoo!国際
 ]
 
-# 日本株・マーケットに関連しそうなキーワード
-REL_KEYS = [
-    "日経", "株価", "株式", "東証", "TOPIX", "日銀", "金利", "円安", "円高",
-    "為替", "ドル円", "FOMC", "FRB", "トランプ", "関税", "決算", "四半期",
-    "米国株", "NYダウ", "ナスダック", "S&P", "半導体", "AI", "自動車",
-    "原油", "金先物", "インフレ", "景気", "GDP", "雇用", "増配", "自社株買い",
+# 関連度キーワードを2段階に分離して精度を上げる。
+# STRONG: 含めば確実に市場ニュース（単独で採用）
+STRONG_KEYS = [
+    "日経平均", "日経", "TOPIX", "東証", "株価", "株式市場", "上場", "株主",
+    "日銀", "金利", "利上げ", "利下げ", "為替", "円安", "円高", "ドル円", "円相場",
+    "FOMC", "FRB", "ECB", "米国株", "NYダウ", "ナスダック", "S&P500", "S&P",
+    "決算", "四半期", "業績", "増配", "減配", "自社株買い", "上方修正", "下方修正",
+    "M&A", "TOB", "新高値", "ストップ高", "ストップ安", "出来高", "売買代金",
+    "原油", "WTI", "金先物", "半導体株", "国債", "長期金利", "日経先物", "先物",
+]
+# SOFT: 市場文脈(STRONG)と同時に出た時だけ採用（単独では雑音になりやすい）
+SOFT_KEYS = [
+    "トランプ", "関税", "AI", "半導体", "自動車", "EV", "インフレ", "景気",
+    "GDP", "雇用統計", "中国", "地政学", "原発", "防衛", "賃上げ",
 ]
 
 
@@ -63,8 +71,13 @@ def _clean_html(text: str) -> str:
 
 
 def _is_relevant(title: str, summary: str) -> bool:
+    """強い市場用語が1つでもあれば採用。弱い用語のみなら2つ以上で採用。
+    （「W杯でトランプ」のような単独ソフト一致＝雑音を除外）"""
     blob = f"{title} {summary}"
-    return any(k in blob for k in REL_KEYS)
+    if any(k in blob for k in STRONG_KEYS):
+        return True
+    soft_hits = sum(1 for k in SOFT_KEYS if k in blob)
+    return soft_hits >= 2
 
 
 def _parse_published(entry) -> datetime | None:
@@ -75,11 +88,22 @@ def _parse_published(entry) -> datetime | None:
     return None
 
 
-_REL_RANK = {"high": 0, "medium": 1, "low": 2}
+# 信頼度ペナルティ(時間換算)。鮮度を主軸に、低信頼ソースは相応に後ろへ。
+_REL_PENALTY_H = {"high": 0.0, "medium": 5.0, "low": 12.0}
 
 
-def fetch_news(hours: int = 18, max_per_feed: int = 15, max_total: int = 25) -> List[NewsItem]:
-    """直近`hours`時間以内の日本株関連ニュースを収集。信頼度高い順に優先。"""
+def _rank_key(item: NewsItem) -> float:
+    """小さいほど上位。実年齢(時間) + 信頼度ペナルティ。
+    鮮度を最優先しつつ、低信頼ソースが古い高信頼記事を押しのけないよう調整。"""
+    if item.published:
+        age_h = (datetime.now(JST) - item.published).total_seconds() / 3600
+    else:
+        age_h = 24.0  # 日付不明は1日前相当として後ろへ
+    return age_h + _REL_PENALTY_H.get(item.reliability, 9.0)
+
+
+def fetch_news(hours: int = 20, max_per_feed: int = 15, max_total: int = 25) -> List[NewsItem]:
+    """直近`hours`時間以内の日本株関連ニュースを収集。鮮度優先で並べる。"""
     cutoff = datetime.now(JST) - timedelta(hours=hours)
     collected: List[NewsItem] = []
 
@@ -117,16 +141,10 @@ def fetch_news(hours: int = 18, max_per_feed: int = 15, max_total: int = 25) -> 
             )
             count += 1
 
-    # 重複タイトル排除→信頼度→新しい順
+    # 重複タイトル排除 → 鮮度優先スコアで昇順
     seen = set()
     dedup: list[NewsItem] = []
-    for item in sorted(
-        collected,
-        key=lambda x: (
-            _REL_RANK.get(x.reliability, 9),
-            -(x.published.timestamp() if x.published else 0),
-        ),
-    ):
+    for item in sorted(collected, key=_rank_key):
         if item.title in seen:
             continue
         seen.add(item.title)
