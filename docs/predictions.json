@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-04T07:33:26.353296+09:00",
+  "generated_at": "2026-07-05T07:33:15.529132+09:00",
   "predictions": {
     "7203": {
       "sl_pct": -3.1,
@@ -64,14 +64,6 @@
       "source": "heuristic",
       "name": "マツダ",
       "price": 1140.0
-    },
-    "6201": {
-      "sl_pct": -0.2,
-      "tp_pct": 0.3,
-      "rationale": "ATR(0.1%)ベース",
-      "source": "heuristic",
-      "name": "豊田自動織機",
-      "price": 20450.0
     },
     "6902": {
       "sl_pct": -2.7,
