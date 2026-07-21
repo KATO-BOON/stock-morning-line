@@ -43,6 +43,7 @@ def _build_prompt(
     max_news_chars: int,
     important_max_chars: int,
     allow_odd_lots: bool,
+    track_text: str = "",
 ) -> str:
     today = datetime.now(JST)
     date_str = today.strftime("%Y-%m-%d(%a)")
@@ -90,8 +91,9 @@ def _build_prompt(
 
     cand_txt = "\n".join(
         f"  {c['code']} {c['name']}: {c['prev_close']:,}円(100株{c['lot_total']:,}円) "
-        f"[{c.get('trend','?')}] 5日{c.get('mom_5d',0):+.1f}%/20日{c.get('mom_20d',0):+.1f}% "
-        f"25日線{c.get('ma25','?'):,}/75日線{c.get('ma75','?'):,}"
+        f"[{c.get('trend','?')}] 20日{c.get('mom_20d',0):+.1f}% "
+        f"市場対比{c.get('rel_str',0):+.1f}pt RSI{c.get('rsi14',50):.0f} "
+        f"出来高比{c.get('vol_ratio',1):.2f} 25日線{c.get('ma25','?'):,}"
         for c in candidates
     ) or "  （候補なし）"
 
@@ -118,8 +120,12 @@ def _build_prompt(
 ※リストは新しい順。**夜間の値動き材料（米株安・半導体急落・為替急変など）を最優先**で取り上げる。
 {news_txt}
 
-【推奨候補銘柄リスト（**絶対にこの中からのみ選ぶ**・トレンド分析済み）】
-※[強い上昇/上昇/横ばい/弱い下降] はトレンド分類。5日/20日はモメンタム。25日線/75日線は移動平均。
+【推奨候補銘柄リスト（**絶対にこの中からのみ選ぶ**・テクニカル分析済み）】
+※指標の意味:
+  ・[強い上昇/上昇/横ばい/弱い下降] = トレンド分類
+  ・市場対比 = 日経より何ポイント強いか（プラスが大きいほど資金が向いている）
+  ・RSI = 70超は買われ過ぎ(高値掴み注意)、30未満は売られ過ぎ
+  ・出来高比 = 1.2以上なら商いを伴う動き（信頼度高）、0.8未満は閑散
 {cand_txt}
 
 【ユーザー保有銘柄（あれば言及）】
@@ -161,14 +167,21 @@ def _build_prompt(
 ・ひとこと: ホールド/警戒/利確検討 のどれか＋理由1行
 
 🎯 きょうの注目（予算{budget_man}万・100株）
-**[強い上昇][上昇]の銘柄を優先**して選ぶ。横ばいは1つまで。下降は選ばない。
+選定の優先順位（厳守）:
+　1. [強い上昇][上昇] を優先。横ばいは1つまで。下降は選ばない
+　2. **市場対比がプラス大きい**銘柄を重視（地合いに逆らって買われている＝資金流入）
+　3. **RSI72以上は避ける**（高値掴みリスク）。選ぶ場合は理由に「過熱注意」と明記
+　4. 出来高比1.2以上を加点評価（商いを伴う動きは continuation しやすい）
 候補リスト外の銘柄は絶対に作らない。2〜3銘柄でよい。
 ① コード 銘柄名（トレンド: 強い上昇 等）
 　・株価◯円 → 100株 ◯◯,◯◯◯円
-　・選ぶ理由を1行（トレンド＋材料を簡潔に）
+　・市場対比+◯pt・RSI◯・出来高比◯ ← 数値を必ず入れる
+　・選ぶ理由を1行（なぜ他より強いかを具体的に）
 　・損切 ◯円(▲◯%)／利確 ◯円(+◯%)
 
 ②／③も同じ形で
+
+{("📉 これまでの推奨実績\n・" + track_text) if track_text else ""}
 
 ⚠️ きょうの注意
 ・最大2件（決算/FOMC/地政学/為替急変など）
@@ -193,6 +206,7 @@ def summarize(
     important_max_chars: int = 400,
     allow_odd_lots: bool = True,
     api_key: str | None = None,
+    track_text: str = "",
 ) -> str:
     api_key = api_key or os.environ.get("GEMINI_API_KEY", "")
     if not api_key:
@@ -207,6 +221,7 @@ def summarize(
         max_news_chars=max_news_chars,
         important_max_chars=important_max_chars,
         allow_odd_lots=allow_odd_lots,
+        track_text=track_text,
     )
 
     last_err = None

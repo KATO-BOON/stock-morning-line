@@ -78,6 +78,9 @@ class Candidate:
     ma75: float            # 75日移動平均
     mom_5d: float          # 5日モメンタム(%)
     mom_20d: float         # 20日モメンタム(%)
+    rsi14: float           # RSI(14) 過熱・売られ過ぎ判定
+    rel_str: float         # 市場対比の強さ(銘柄20日 - 日経20日, %pt)
+    vol_ratio: float       # 直近5日平均出来高 / 25日平均出来高
     trend: str             # 強い上昇/上昇/横ばい/弱い下降/下降
     trend_score: float     # 並べ替え用スコア
 
@@ -91,13 +94,32 @@ class Candidate:
             "ma75": round(self.ma75, 1),
             "mom_5d": round(self.mom_5d, 1),
             "mom_20d": round(self.mom_20d, 1),
+            "rsi14": round(self.rsi14, 0),
+            "rel_str": round(self.rel_str, 1),
+            "vol_ratio": round(self.vol_ratio, 2),
             "trend": self.trend,
         }
 
 
+def _rsi(closes, period: int = 14) -> float:
+    """RSI(14)。70超=買われ過ぎ、30未満=売られ過ぎの目安。"""
+    diff = closes.diff().dropna()
+    if len(diff) < period:
+        return 50.0
+    recent = diff.tail(period)
+    gain = float(recent[recent > 0].sum())
+    loss = float(-recent[recent < 0].sum())
+    if loss == 0:
+        return 100.0 if gain > 0 else 50.0
+    rs = (gain / period) / (loss / period)
+    return 100.0 - (100.0 / (1.0 + rs))
+
+
 def _classify_trend(price: float, ma25: float, ma75: float,
-                    mom_5d: float, mom_20d: float) -> tuple[str, float]:
-    """移動平均の並びとモメンタムからトレンドを分類しスコア化。
+                    mom_5d: float, mom_20d: float,
+                    rsi14: float = 50.0, rel_str: float = 0.0,
+                    vol_ratio: float = 1.0) -> tuple[str, float]:
+    """移動平均・モメンタム・RSI・市場対比・出来高からトレンドを分類しスコア化。
 
     スコアが高い=上昇基調。並べ替えと足切りに使う。
     """
@@ -112,6 +134,22 @@ def _classify_trend(price: float, ma25: float, ma75: float,
     # モメンタム
     score += mom_20d * 0.15   # 20日の地合い
     score += mom_5d * 0.10    # 直近の勢い
+    # 市場対比の強さ（日経より強い＝相対的に資金が向いている）
+    score += rel_str * 0.12
+    # 出来高増加を伴う動きは信頼度が高い
+    if vol_ratio >= 1.5:
+        score += 1.0
+    elif vol_ratio >= 1.2:
+        score += 0.5
+    elif vol_ratio < 0.7:
+        score -= 0.5   # 閑散＝勢い続きにくい
+    # RSIによる過熱／売られ過ぎ調整
+    if rsi14 >= 80:
+        score -= 2.0   # 極端な過熱＝高値掴みリスク大
+    elif rsi14 >= 72:
+        score -= 1.0
+    elif rsi14 <= 30:
+        score -= 0.5   # 下落継続中の可能性
     # 過熱気味（5日で+12%超）は少し減点（高値掴みリスク）
     if mom_5d > 12:
         score -= 1.0
@@ -143,6 +181,17 @@ def fetch_candidates(budget_man: int, max_count: int = 50) -> list[Candidate]:
         print(f"[warn] 一括取得失敗: {e}")
         return []
 
+    # 市場対比の基準（日経ETFの20日騰落率）。個別がこれを上回れば相対的に強い。
+    mkt_20d = 0.0
+    try:
+        mk = yf.Ticker("1321.T").history(period="60d", interval="1d",
+                                         auto_adjust=False)["Close"].dropna()
+        if len(mk) >= 21:
+            mkt_20d = (float(mk.iloc[-1]) - float(mk.iloc[-21])) / float(mk.iloc[-21]) * 100
+        print(f"[info] 市場基準(日経20日騰落率): {mkt_20d:+.1f}%")
+    except Exception as e:
+        print(f"[warn] 市場基準取得失敗(相対強度は0扱い): {e}")
+
     candidates: list[Candidate] = []
     for code, name in UNIVERSE:
         sym = f"{code}.T"
@@ -164,13 +213,29 @@ def fetch_candidates(budget_man: int, max_count: int = 50) -> list[Candidate]:
             p20 = float(closes.iloc[-21]) if len(closes) >= 21 else price
             mom_5d = (price - p5) / p5 * 100 if p5 else 0.0
             mom_20d = (price - p20) / p20 * 100 if p20 else 0.0
-            trend, tscore = _classify_trend(price, ma25, ma75, mom_5d, mom_20d)
+            # RSI(14)
+            rsi14 = _rsi(closes, 14)
+            # 市場対比の強さ（銘柄20日 − 日経20日）
+            rel_str = mom_20d - mkt_20d
+            # 出来高比（直近5日平均 ÷ 25日平均）
+            vol_ratio = 1.0
+            try:
+                vols = sub["Volume"].dropna()
+                if len(vols) >= 25:
+                    v5 = float(vols.tail(5).mean())
+                    v25 = float(vols.tail(25).mean())
+                    vol_ratio = v5 / v25 if v25 else 1.0
+            except Exception:
+                pass
+            trend, tscore = _classify_trend(price, ma25, ma75, mom_5d, mom_20d,
+                                            rsi14, rel_str, vol_ratio)
             candidates.append(Candidate(
                 code=code, name=name,
                 prev_close=price,
                 lot_total=price * 100,
                 ma25=ma25, ma75=ma75,
                 mom_5d=mom_5d, mom_20d=mom_20d,
+                rsi14=rsi14, rel_str=rel_str, vol_ratio=vol_ratio,
                 trend=trend, trend_score=tscore,
             ))
         except Exception as e:

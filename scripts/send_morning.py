@@ -99,6 +99,17 @@ def main() -> int:
     print(f"[info] 予算{budget_man}万円の候補銘柄取得中…")
     candidates = fetch_candidates(budget_man)
 
+    # 過去の推奨実績を検証して勝率を出す（当たっているか数字で確認するため）
+    track_text = ""
+    try:
+        import pick_tracker
+        pick_tracker.evaluate()
+        track_text = pick_tracker.summary_text()
+        if track_text:
+            print(f"[info] 推奨実績: {track_text}")
+    except Exception as e:
+        print(f"[warn] 実績集計スキップ: {e}")
+
     holdings = settings.get("holdings", [])
     if holdings:
         print(f"[info] 保有{len(holdings)}銘柄の動向分析中…")
@@ -117,6 +128,7 @@ def main() -> int:
         max_news_chars=int(settings.get("max_news_chars", 220)),
         important_max_chars=int(settings.get("important_news_max_chars", 400)),
         allow_odd_lots=False,
+        track_text=track_text,
     )
 
     # ハルシネーション後処理: 注目銘柄セクション内のコードのみ検査
@@ -134,6 +146,19 @@ def main() -> int:
         message += f"\n\n⚠️ {','.join(bad[:5])} は推奨候補外。実在をご確認ください。"
     else:
         print(f"[ok] 注目銘柄コードは全て候補内")
+
+    # 推奨銘柄を記録（後日リターンを検証して勝率を出すため）
+    try:
+        import pick_tracker
+        by_code = {c.code: c for c in candidates}
+        to_record = [
+            {"code": c, "name": by_code[c].name, "prev_close": by_code[c].prev_close}
+            for c in rec_codes if c in by_code
+        ]
+        if to_record:
+            pick_tracker.record_picks(to_record)
+    except Exception as e:
+        print(f"[warn] 推奨記録スキップ: {e}")
 
     print("[info] LINE送信中…")
     status = broadcast(message)
