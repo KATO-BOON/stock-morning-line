@@ -1,3 +1,22 @@
 {
-  "picks": []
+  "picks": [
+    {
+      "date": "2026-07-22",
+      "code": "8113",
+      "name": "ユニチャーム",
+      "ref_close": 966.0,
+      "entry": null,
+      "ret_5d": null,
+      "ret_20d": null
+    },
+    {
+      "date": "2026-07-22",
+      "code": "7211",
+      "name": "三菱自動車",
+      "ref_close": 389.5,
+      "entry": null,
+      "ret_5d": null,
+      "ret_20d": null
+    }
+  ]
 }
