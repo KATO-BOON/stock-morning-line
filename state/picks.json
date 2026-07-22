@@ -17,6 +17,24 @@
       "entry": null,
       "ret_5d": null,
       "ret_20d": null
+    },
+    {
+      "date": "2026-07-23",
+      "code": "7211",
+      "name": "三菱自動車",
+      "ref_close": 383.70001220703125,
+      "entry": null,
+      "ret_5d": null,
+      "ret_20d": null
+    },
+    {
+      "date": "2026-07-23",
+      "code": "5401",
+      "name": "日本製鉄",
+      "ref_close": 599.0,
+      "entry": null,
+      "ret_5d": null,
+      "ret_20d": null
     }
   ]
 }
