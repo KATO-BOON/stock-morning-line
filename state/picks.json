@@ -35,6 +35,33 @@
       "entry": null,
       "ret_5d": null,
       "ret_20d": null
+    },
+    {
+      "date": "2026-07-26",
+      "code": "8113",
+      "name": "ユニチャーム",
+      "ref_close": 957.2000122070312,
+      "entry": null,
+      "ret_5d": null,
+      "ret_20d": null
+    },
+    {
+      "date": "2026-07-26",
+      "code": "5401",
+      "name": "日本製鉄",
+      "ref_close": 616.9000244140625,
+      "entry": null,
+      "ret_5d": null,
+      "ret_20d": null
+    },
+    {
+      "date": "2026-07-26",
+      "code": "7211",
+      "name": "三菱自動車",
+      "ref_close": 347.0,
+      "entry": null,
+      "ret_5d": null,
+      "ret_20d": null
     }
   ]
 }
